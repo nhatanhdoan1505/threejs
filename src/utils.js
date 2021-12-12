@@ -1,11 +1,11 @@
 import { FBXLoader } from "./lib/three.js/examples/jsm/loaders/FBXLoader.js";
 
 export class Utils {
-  async load3DModel() {
+  async load3DModel(path) {
     return new Promise(function (resolve, reject) {
       const loaders = new FBXLoader();
       loaders.load(
-        "src/model/dance/zombie.fbx",
+        path,
         (object) => {
           resolve(object);
         },
@@ -27,13 +27,5 @@ export class Utils {
 
   randomDirection(keyCode) {
     return keyCode[this.randomQuatityChallenge(0, keyCode.length)];
-  }
-
-  checkKeyPress(value) {
-    document.onkeydown = function (e) {
-      return { result: e.keyCode === value, press: true };
-    };
-
-    return { result: null, press: false };
   }
 }

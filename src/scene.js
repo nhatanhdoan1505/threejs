@@ -7,14 +7,14 @@ export class Scene {
   renderer;
   objects = [];
   controls;
-  mixer;
+  clock = new THREE.Clock();
 
   constructor() {
     this.createScene();
     this.createCamera();
-    this.createRenderer();
     this.createLight();
     this.createGround();
+    this.createRenderer();
     this.createOrbitControl();
   }
 
@@ -31,9 +31,9 @@ export class Scene {
   }
 
   createCamera(
-    fieldOfView = 60,
+    fieldOfView = 120,
     near = 0.1,
-    far = 1000,
+    far = 10000,
     canvasWidth = window.innerWidth,
     canvasHeight = window.innerHeight
   ) {
@@ -44,16 +44,18 @@ export class Scene {
       near,
       far
     );
-    this.camera.position.z = 5;
+    this.camera.position.x = -9;
+    this.camera.position.y = 104;
+    this.camera.position.z = 229;
   }
 
-  createRenderer(
-    canvasWidth = window.innerWidth,
-    canvasHeight = window.innerHeight
-  ) {
-    this.renderer = new THREE.WebGLRenderer();
-    this.renderer.setSize(canvasWidth, canvasHeight);
+  createRenderer() {
+    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.shadowMap.enabled = true;
     document.body.appendChild(this.renderer.domElement);
+    window.addEventListener("resize", this.onWindowResize.bind(this));
   }
 
   createLight() {
@@ -88,42 +90,23 @@ export class Scene {
     this.scene.add(grid);
   }
 
+  onWindowResize() {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+
   render() {
     requestAnimationFrame(this.render.bind(this));
-    let delta = new THREE.Clock().getDelta(); // clock is an instance of THREE.Clock
-    if (this.mixer) {
-      this.mixer.update(delta);
-    }
+    let delta = this.clock.getDelta();
+
+    this.objects.forEach((o) => {
+      if (o.mixer) {
+        o.mixer.update(delta);
+      }
+    });
 
     this.renderer.render(this.scene, this.camera);
-    // for (let i in this.objects) {
-    //   this.objects[i].rotation.x += 0.01;
-    // }
   }
 }
-
-// const app = () => {
-//   let scene = new Scene();
-//   let controller = new Controller();
-//   window.controller = controller;
-//   window.scene = scene;
-//   scene.render();
-// };
-
-// function loadModel() {
-//   window.controller.loadModel().then((danceModel) => {
-//     console.log("aaaa");
-//     danceModel.scale.setScalar(0, 1);
-//     danceModel.traverse((c) => (c.castShadow = true));
-//     const anim = new THREE.FBXLoader();
-//     const mixer = null;
-//     console.log("aaaa");
-//     anim.load("./src/model/dance/dancing.fbx", (a) => {
-//       mixer = new THREE.AnimationMixer(danceModel);
-//       const idle = mixer.clipAction(a.animations[0]);
-//       idle.play();
-//     });
-//     console.log(danceModel);
-//     window.scene.addObject(danceModel);
-//   });
-// }

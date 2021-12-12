@@ -1,10 +1,18 @@
 import { Utils } from "./utils.js";
-
+const keyHtml = {
+  37: "<span><i class='fa fa-arrow-left'></i></span>",
+  38: "<span><i class='fa fa-arrow-up'></i></span>",
+  39: "<span><i class='fa fa-arrow-right'></i></span>",
+  40: " <span><i class='fa fa-arrow-down'></i></span>",
+};
 export class GamePlay {
   gameControlChallenge;
   keyCode = [37, 38, 39, 40];
   utils = new Utils();
   challenge = [];
+  playAnwser = [];
+  timeUp = true;
+  miss = true;
 
   ranndomTurnChallenge() {
     let challenge = new Array(this.utils.randomQuatityChallenge(3, 8)).fill(0);
@@ -14,42 +22,49 @@ export class GamePlay {
   }
 
   gameStart() {
-    // this.gameControlChallenge = setInterval(() => {
-    //   this.challenge = this.ranndomTurnChallenge();
-    // }, 3000);
-    this.challenge = this.ranndomTurnChallenge();
-    console.log(this.challenge);
-    // this.checkMiss();
-  }
-
-  checkKeyPress(value) {
-    return new Promise((resolve, reject) => {
-      let waiter = setInterval(() => {
-        let { result, press } = this.utils.checkKeyPress(value);
-        if (press) {
-          clearInterval(waiter);
-          resolve(result);
-        }
-      }, 300);
-    });
+    this.gameControlChallenge = setInterval(() => {
+      this.timeUp = false;
+      this.challenge = this.ranndomTurnChallenge();
+      this.showChallenge();
+      this.listenKeyBoard();
+      setTimeout(() => {
+        this.timeUp = true;
+        this.playAnwser = [];
+      }, 3000);
+    }, 3000);
   }
 
   checkMiss() {
-    return new Promise((resolve) => {
-      let index = 0;
-      while (index < this.challenge.length) {
-        this.checkKeyPress(this.challenge[index]).then((result) => {
-          if (!result) {
-            console.log("miss");
-            resolve(true);
-          }
-          if (i === this.challenge.length - 1) {
-            console.log("pass");
-            resolve(false);
-          }
-          index += 1;
-        });
-      }
-    });
+    if (this.playAnwser.length < this.challenge.length && this.timeUp) {
+      this.miss = true;
+      this.timeUp = true;
+    }
+
+    if (
+      this.challenge[this.playAnwser.length - 1] !==
+      this.playAnwser[this.playAnwser.length - 1]
+    ) {
+      this.miss = true;
+      this.timeUp = true;
+    }
+
+    if (this.playAnwser.length === this.challenge.length) this.miss = false;
+  }
+
+  listenKeyBoard() {
+    const self = this;
+    if (!this.timeUp) {
+      document.onkeydown = function (e) {
+        console.log(e.keyCode);
+        self.playAnwser.push(e.keyCode);
+        self.checkMiss();
+      };
+    }
+  }
+
+  showChallenge() {
+    const html = this.challenge.map((c) => keyHtml[c]).join("");
+    const challenge = document.querySelector(".challenge");
+    challenge.innerHTML = html;
   }
 }

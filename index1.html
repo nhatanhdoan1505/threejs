@@ -2,26 +2,26 @@
 <html lang="en">
 
 <head>
-    <title>three.js webgl - FBX loader</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <!-- <link type="text/css" rel="stylesheet" href="main.css"> -->
+	<title>three.js webgl - FBX loader</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<!-- <link type="text/css" rel="stylesheet" href="main.css"> -->
 </head>
 
 <body>
-    <div id="info">
-        <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - FBXLoader<br />
-        Character and animation from <a href="https://www.mixamo.com/" target="_blank" rel="noopener">Mixamo</a>
-    </div>
+	<div id="info">
+		<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - FBXLoader<br />
+		Character and animation from <a href="https://www.mixamo.com/" target="_blank" rel="noopener">Mixamo</a>
+	</div>
 
-    <script type="module">
+	<script type="module">
 
-        import * as THREE from '/src/lib/three/three.js/build/three.module.js';
+		import * as THREE from '/src/lib/three.js/build/three.module.js';
 
-			import Stats from '/src/lib/three/three.js/examples/jsm/libs/stats.module.js';
+			// import Stats from '/src/lib/three.js/examples/jsm/libs/stats.module.js';
 
-			import { OrbitControls } from '/src/lib/three/three.js/examples/jsm/controls/OrbitControls.js';
-			import { FBXLoader } from '/src/lib/three/three.js/examples/jsm/loaders/FBXLoader.js';
+			import { OrbitControls } from '/src/lib/three.js/examples/jsm/controls/OrbitControls.js';
+			import { FBXLoader } from '/src/lib/three.js/examples/jsm/loaders/FBXLoader.js';
 
 			let camera, scene, renderer, stats;
 
@@ -72,7 +72,7 @@
 
 				// model
 				const loader = new FBXLoader();
-				loader.load( 'src/model/dance/dance.fbx', function ( object ) {
+				loader.load( 'src/model/girl/girl.fbx', function ( object ) {
 
 					// mixer = new THREE.AnimationMixer( object );
 
@@ -107,13 +107,12 @@
 				window.addEventListener( 'resize', onWindowResize );
 
 				// stats
-				stats = new Stats();
-				container.appendChild( stats.dom );
+				// stats = new Stats();
+				// container.appendChild( stats.dom );
 
 			}
 
 			function onWindowResize() {
-
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
 
@@ -133,7 +132,7 @@
 
 				renderer.render( scene, camera );
 
-				stats.update();
+				// stats.update();
 
 			}
 

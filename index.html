@@ -17,17 +17,43 @@
     <script src="./src/lib/OBJLoader.js"></script>
     <script src="./src/lib/OrbitControls.js"></script> -->
     <!-- <script src="./src/lib/Raycaster.js"></script> -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <style type="text/css">
         body {
             height: 100vh;
+        }
+
+        .challenge {
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+        }
+
+        .challenge>span {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            margin: 10px;
         }
     </style>
 </head>
 
 <body onload='game.initScene()'>
     <button onClick="game.addObject()">CLick</button>
-    <button onClick="game.loadModel()">Load</button>
-    <button onClick="game.turnOnLight()">Light</button>
+    <button onClick="game.loadModel(['girl', 'zombie'])">Load</button>
+    <button onClick="game.playAnimation('girl')">Animation</button>
+    <button onClick="game.playAnimation('zombie')">Animation</button>
+    <button onClick="game.gameStart()">PlayGame</button>
+    <div class="challenge">
+    </div>
 </body>
 
 </html>

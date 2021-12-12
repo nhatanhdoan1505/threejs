@@ -14,9 +14,9 @@ export class Controller {
     return light;
   }
 
-  async loadModel() {
+  async loadModel(path) {
     try {
-      return await this.service.load3DModel();
+      return await this.service.load3DModel(path);
     } catch (error) {
       console.error(error);
     }
