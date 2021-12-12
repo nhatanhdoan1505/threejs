@@ -1,0 +1,15 @@
+/src/lib/three.js/test
+/src/lib/three.js/.github
+/src/lib/three.js/docs
+/src/lib/three.js/editor
+/src/lib/three.js/files
+/src/lib/three.js/examples/*.html
+/src/lib/three.js/examples/screenshots
+/src/lib/three.js/examples/sounds
+/src/lib/three.js/examples/textures
+/src/lib/three.js/examples/nodes
+/src/lib/three.js/examples/*.json
+/src/lib/three.js/examples/*.css
+/src/lib/three.js/examples/models
+/src/lib/three.js/examples/fonts
+/src/lib/three.js/examples/files

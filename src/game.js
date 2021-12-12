@@ -1,8 +1,8 @@
 import { Scene } from "./scene.js";
 import { Controller } from "./controller.js";
 import { GamePlay } from "./gamePlay.js";
-import * as THREE from "./lib/three/three.js/build/three.module.js";
-import { FBXLoader } from "./lib/three/three.js/examples/jsm/loaders/FBXLoader.js";
+import * as THREE from "./lib/three.js/build/three.module.js";
+import { FBXLoader } from "./lib/three.js/examples/jsm/loaders/FBXLoader.js";
 
 class Game {
   mainScene = new Scene();

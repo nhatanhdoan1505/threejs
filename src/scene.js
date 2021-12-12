@@ -1,6 +1,5 @@
-import { Controller } from "./controller.js";
-import * as THREE from "./lib/three/three.js/build/three.module.js";
-import { OrbitControls } from "/src/lib/three/three.js/examples/jsm/controls/OrbitControls.js";
+import * as THREE from "./lib/three.js/build/three.module.js";
+import { OrbitControls } from "./lib/three.js/examples/jsm/controls/OrbitControls.js";
 
 export class Scene {
   scene;

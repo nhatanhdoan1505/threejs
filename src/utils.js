@@ -1,4 +1,4 @@
-import { FBXLoader } from "./lib/three/three.js/examples/jsm/loaders/FBXLoader.js";
+import { FBXLoader } from "./lib/three.js/examples/jsm/loaders/FBXLoader.js";
 
 export class Utils {
   async load3DModel() {
