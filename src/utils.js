@@ -21,11 +21,27 @@ export class Utils {
     });
   }
 
-  randomQuatityChallenge(min, max) {
+  randomNumber(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }
 
   randomDirection(keyCode) {
-    return keyCode[this.randomQuatityChallenge(0, keyCode.length)];
+    return keyCode[this.randomNumber(0, keyCode.length)];
+  }
+
+  compareTwoArray(a, b) {
+    for (let i in a) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+
+  loadSound() {
+    const sound = new Howl({
+      // src: ["/src/music/start.mp3"],
+      src: ["/src/music/start.mp3"],
+      html5: true,
+    });
+    return sound;
   }
 }

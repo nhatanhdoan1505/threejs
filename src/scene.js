@@ -8,6 +8,11 @@ export class Scene {
   objects = [];
   controls;
   clock = new THREE.Clock();
+  isFirstDance = true;
+  startAnim;
+  duration;
+
+  mixer;
 
   constructor() {
     this.createScene();
@@ -100,7 +105,6 @@ export class Scene {
   render() {
     requestAnimationFrame(this.render.bind(this));
     let delta = this.clock.getDelta();
-
     this.objects.forEach((o) => {
       if (o.mixer) {
         o.mixer.update(delta);

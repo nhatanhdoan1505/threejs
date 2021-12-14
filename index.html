@@ -6,22 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THREEJS</title>
-    <!-- <script type="text/javascript" src="./src/lib/three.js"></script> -->
-    <!-- <script type="module" src="./src/scene.js"></script>
-    <script type="module" src="./src/utils.js"></script>
-    <script type="module" src="./src/controller.js"></script> -->
-    <script type="module" src="./src/game.js"></script>
-    <!-- <script src="./src/lib/FBXLoader.js"></script>
-    <script src="./src/lib/GLTFLoader.js"></script>
-    <script src="./src/lib/MTLLoader.js"></script>
-    <script src="./src/lib/OBJLoader.js"></script>
-    <script src="./src/lib/OrbitControls.js"></script> -->
-    <!-- <script src="./src/lib/Raycaster.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script type="module" src="./src/gameController.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"
+        integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <style type="text/css">
         body {
             height: 100vh;
+            width: 100vw;
+            overflow: hidden;
         }
 
         .challenge {
@@ -30,6 +26,12 @@
             left: 50%;
             transform: translate(-50%, -50%);
             display: flex;
+
+            padding: 10px;
+        }
+
+        .play {
+            border: 1px solid #4e1f9d;
         }
 
         .challenge>span {
@@ -43,15 +45,123 @@
             border-radius: 50%;
             margin: 10px;
         }
+
+        button {
+            position: absolute
+        }
+
+        .pass {
+            background-color:
+                #97bfb4;
+            color: white;
+        }
+
+        .miss {
+            background-color: #DD4A48;
+            color: white;
+        }
+
+        .vibrate {
+            animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+
+        @keyframes shake {
+
+            10%,
+            90% {
+                transform: translate3d(-1px, 0, 0);
+            }
+
+            20%,
+            80% {
+                transform: translate3d(2px, 0, 0);
+            }
+
+            30%,
+            50%,
+            70% {
+                transform: translate3d(-4px, 0, 0);
+            }
+
+            40%,
+            60% {
+                transform: translate3d(4px, 0, 0);
+            }
+        }
+
+        .timer {
+            width: 200px;
+            height: 20px;
+            position: relative;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            /* border: 1px solid #4e1f9d; */
+        }
+
+        .timer::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -30px;
+            width: 28px;
+            height: 100%;
+            background-color: white;
+        }
+
+        .timer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 202px;
+            width: 30px;
+            height: 100%;
+            background-color: white;
+        }
+
+        .movementBall {
+            color: #4e1f9d;
+            position: absolute;
+            top: 15%;
+            left: -5%;
+            transform: translate(-50%, -50%);
+            animation-name: displaceContent;
+            animation-duration: 3s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+            z-index: -1;
+        }
+
+        @keyframes displaceContent {
+            from {
+                transform: translateX(-1em)
+            }
+
+            to {
+                transform: translateX(14em)
+            }
+        }
+
+        button {
+            position: absolute;
+        }
     </style>
 </head>
 
-<body onload='game.initScene()'>
-    <button onClick="game.addObject()">CLick</button>
+<body>
+    <!-- <button onClick="game.addObject()">CLick</button>
     <button onClick="game.loadModel(['girl', 'zombie'])">Load</button>
     <button onClick="game.playAnimation('girl')">Animation</button>
-    <button onClick="game.playAnimation('zombie')">Animation</button>
+    <button onClick="game.playAnimation('zombie')">Animation</button> -->
     <button onClick="game.gameStart()">PlayGame</button>
+    <div class="timer">
+        <span id="move">
+        </span>
+    </div>
     <div class="challenge">
     </div>
 </body>
