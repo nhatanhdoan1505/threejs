@@ -13,143 +13,10 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
-    <style type="text/css">
-        body {
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-        }
-
-        .challenge {
-            position: absolute;
-            top: 80%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-
-            padding: 10px;
-        }
-
-        .play {
-            border: 1px solid #4e1f9d;
-        }
-
-        .challenge>span {
-            font-size: 2rem;
-            width: 50px;
-            height: 50px;
-            border: 1px solid black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            margin: 10px;
-        }
-
-        button {
-            position: absolute
-        }
-
-        .pass {
-            background-color:
-                #97bfb4;
-            color: white;
-        }
-
-        .miss {
-            background-color: #DD4A48;
-            color: white;
-        }
-
-        .vibrate {
-            animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
-            transform: translate3d(0, 0, 0);
-            backface-visibility: hidden;
-            perspective: 1000px;
-        }
-
-        @keyframes shake {
-
-            10%,
-            90% {
-                transform: translate3d(-1px, 0, 0);
-            }
-
-            20%,
-            80% {
-                transform: translate3d(2px, 0, 0);
-            }
-
-            30%,
-            50%,
-            70% {
-                transform: translate3d(-4px, 0, 0);
-            }
-
-            40%,
-            60% {
-                transform: translate3d(4px, 0, 0);
-            }
-        }
-
-        .timer {
-            width: 200px;
-            height: 20px;
-            position: relative;
-            top: 70%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 100;
-            /* border: 1px solid #4e1f9d; */
-        }
-
-        .timer::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -30px;
-            width: 28px;
-            height: 100%;
-            background-color: white;
-        }
-
-        .timer::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 202px;
-            width: 30px;
-            height: 100%;
-            background-color: white;
-        }
-
-        .movementBall {
-            color: #4e1f9d;
-            position: absolute;
-            top: 15%;
-            left: -5%;
-            transform: translate(-50%, -50%);
-            animation-name: displaceContent;
-            animation-duration: 3s;
-            animation-iteration-count: 1;
-            animation-fill-mode: forwards;
-            z-index: -1;
-        }
-
-        @keyframes displaceContent {
-            from {
-                transform: translateX(-1em)
-            }
-
-            to {
-                transform: translateX(14em)
-            }
-        }
-
-        button {
-            position: absolute;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./style.css">
 </head>
 
 <body>
@@ -158,7 +25,9 @@
     <button onClick="game.playAnimation('girl')">Animation</button>
     <button onClick="game.playAnimation('zombie')">Animation</button> -->
     <button onClick="game.gameStart()">PlayGame</button>
+    <h1 id="result"></h1>
     <div class="timer">
+        <div id="target"></div>
         <span id="move">
         </span>
     </div>

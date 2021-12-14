@@ -24,4 +24,9 @@ export const GameSystem = {
     1: [1],
     2: [-100, 100],
   },
+  target: {
+    point: 1800,
+    perfect: 100,
+    cool: 200,
+  },
 };

@@ -8,17 +8,27 @@ const keyHtml = {
 export class UI {
   div = document.querySelector(".challenge");
   timer = document.querySelector(".timer");
-  result = document.querySelector(".result");
+  result = document.querySelector("#result");
   moveBall = document.querySelector("#move");
+  target = document.querySelector("#target");
 
   playGame() {
     this.timer.classList.add("play");
+    this.target.classList.add("target");
   }
 
-  showResult(miss, test = true) {
-    let html = miss ? "Miss" : "Perfect";
-    html = !test ? "Wait" : html;
-    // this.result.innerHTML = html;
+  showResult(status) {
+    let _status =
+      status === 0
+        ? "miss"
+        : status === 1
+        ? "perfect"
+        : status === 2
+        ? "cool"
+        : "good";
+    this.result.className = "";
+    this.result.classList.add("fade-in", "result", _status);
+    this.result.innerHTML = _status;
   }
 
   showChallenge(challenge) {
@@ -30,7 +40,7 @@ export class UI {
 
   showChallengeColor(index, miss) {
     const spanList = this.div.children;
-    spanList[index].classList.add(miss ? "miss" : "pass");
+    spanList[index].classList.add(miss === 0 ? "miss" : "pass");
     spanList[index].classList.add("vibrate");
   }
 

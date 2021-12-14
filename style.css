@@ -1,0 +1,193 @@
+body {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.challenge {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+
+    padding: 10px;
+}
+
+.play {
+    border: 1px solid #4e1f9d;
+}
+
+.challenge>span {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin: 10px;
+}
+
+button {
+    position: absolute
+}
+
+.pass {
+    background-color:
+        #97bfb4;
+    color: white;
+}
+
+.miss {
+    background-color: #DD4A48;
+    color: white;
+}
+
+.vibrate {
+    animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+.timer {
+    width: 200px;
+    height: 20px;
+    position: relative;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    /* border: 1px solid #4e1f9d; */
+}
+
+.target{
+    width:4px;
+    height: 20px;
+    background: linear-gradient(to left, #c33764 , #1d2671);
+    position: absolute;
+    left: 80%;
+}
+
+.timer::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -30px;
+    width: 28px;
+    height: 100%;
+    background-color: white;
+}
+
+.timer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 202px;
+    width: 30px;
+    height: 100%;
+    background-color: white;
+}
+
+.movementBall {
+    color: #4e1f9d;
+    position: absolute;
+    top: 15%;
+    left: -5%;
+    transform: translate(-50%, -50%);
+    animation-name: displaceContent;
+    animation-duration: 4s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    z-index: -1;
+}
+
+@keyframes displaceContent {
+    from {
+        transform: translateX(-1em)
+    }
+
+    to {
+        transform: translateX(14em)
+    }
+}
+
+.result {
+    text-transform: uppercase;
+    font-family: 'Permanent Marker', cursive;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    letter-spacing: 10px;
+}
+
+.perfect {
+    background: linear-gradient(to right, #36d1dc, #5b86e5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.miss {
+    background: linear-gradient(to right, #eb3349, #f45c43);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.good {
+    background: linear-gradient(to right, #56ab2f, #a8e063);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.cool {
+    background: linear-gradient(to right, #4ca1af, #c4e0e5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.fade-in {
+    opacity: 1;
+    animation-name: fadeInOpacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 1s;
+}
+
+@keyframes fadeInOpacity {
+    0% {
+        opacity: 0;
+    }
+    50%{
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
