@@ -14,6 +14,13 @@ export class Scene {
 
   mixer;
 
+  _x = -9;
+  _y = 104;
+  _z = 229;
+
+  isMoveCamera = false;
+  moveDirection = 1;
+
   constructor() {
     this.createScene();
     this.createCamera();
@@ -49,9 +56,13 @@ export class Scene {
       near,
       far
     );
-    this.camera.position.x = -9;
-    this.camera.position.y = 104;
-    this.camera.position.z = 229;
+    this.setPositionCamera();
+  }
+
+  setPositionCamera() {
+    this.camera.position.x = this._x;
+    this.camera.position.y = this._y;
+    this.camera.position.z = this._z;
   }
 
   createRenderer() {
@@ -102,6 +113,12 @@ export class Scene {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
+  moveCamera() {
+    this.camera.position.x += 0.5 * this.moveDirection;
+    this.camera.position.y += 0.5;
+    this.camera.position.z += 0.2;
+  }
+
   render() {
     requestAnimationFrame(this.render.bind(this));
     let delta = this.clock.getDelta();
@@ -110,6 +127,10 @@ export class Scene {
         o.mixer.update(delta);
       }
     });
+
+    if (this.isMoveCamera) {
+      this.moveCamera();
+    }
 
     this.renderer.render(this.scene, this.camera);
   }

@@ -115,4 +115,16 @@ export class GameHandler {
       resolve(true);
     });
   }
+
+  moveCamera() {
+    let randomDirection = Math.floor(Math.random() * 2);
+    this.mainScene.moveDirection = randomDirection === 0 ? -1 : 1;
+    this.mainScene.isMoveCamera = true;
+    setTimeout(() => this.stopMoveCamera(), 4000);
+  }
+
+  stopMoveCamera() {
+    this.mainScene.isMoveCamera = false;
+    this.mainScene.setPositionCamera();
+  }
 }

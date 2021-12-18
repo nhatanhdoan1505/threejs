@@ -142,7 +142,7 @@ button {
     text-transform: uppercase;
     font-family: 'Permanent Marker', cursive;
     position: absolute;
-    top: 10%;
+    top: 15%;
     left: 50%;
     transform: translate(-50%, -50%);
     letter-spacing: 10px;
@@ -190,4 +190,15 @@ button {
     100% {
         opacity: 1;
     }
+}
+
+.point{
+    font-size: 3rem;
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Readex Pro', sans-serif;
+    letter-spacing:5px;
+    color: #F05454
 }

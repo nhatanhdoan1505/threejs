@@ -11,6 +11,8 @@ export class GameController {
   timeUp = true;
   status = 0;
   pressSpace = false;
+  combo = 0;
+  point = 0;
 
   gameHandler;
   utils;
@@ -52,7 +54,6 @@ export class GameController {
     this.status = 0;
     this.playAnwser = [];
     clearInterval(this.gameControlChallenge);
-    
   }
 
   startGamePlay() {
@@ -90,6 +91,7 @@ export class GameController {
       this.playAnwser = [];
       this.ui.showResult(this.status);
       this.ui.miss(this.playAnwser.length - 1);
+      this.combo = 0;
       return this.gameHandler.standAnimation("girl");
     }
 
@@ -103,6 +105,7 @@ export class GameController {
       this.ui.showChallengeColor(this.playAnwser.length - 1, 0);
       this.playAnwser = [];
       this.ui.showResult(this.status);
+      this.combo = 0;
       return this.gameHandler.standAnimation("girl");
     }
 
@@ -116,6 +119,7 @@ export class GameController {
       this.ui.miss(this.playAnwser.length - 1);
       this.playAnwser = [];
       this.ui.showResult(this.status);
+      this.combo = 0;
       return this.gameHandler.standAnimation("girl");
     }
     this.status = false;
@@ -125,15 +129,27 @@ export class GameController {
     if (target <= GameSystem.target.cool) {
       if (target <= GameSystem.target.perfect) {
         this.status = 1;
+        this.combo += 1;
       } else {
         this.status = 2;
+        this.combo = 0;
       }
     } else {
       this.status = 3;
+      this.combo = 0;
     }
-    console.log("", target);
 
-    this.ui.showResult(this.status);
+    let point =
+      target === 0
+        ? GameSystem.point / 10
+        : Math.floor(GameSystem.point / target);
+    point = point > GameSystem.point ? GameSystem.point : point;
+    
+    this.increasePoint(this.point, this.point + point);
+    this.point += point;
+
+    this.ui.showResult(this.status, this.combo);
+    this.combo > 2 && this.gameHandler.moveCamera();
     return this.gameHandler.playAnimation("girl");
   }
 
@@ -149,6 +165,18 @@ export class GameController {
         }
       }
     };
+  }
+
+  moveCamera() {
+    this.gameHandler.moveCamera();
+  }
+
+  increasePoint(min, max) {
+    let increase = setInterval(() => {
+      if (min > max) clearInterval(increase);
+      min += 1;
+      this.ui.showPoint(min);
+    }, 10);
   }
 }
 

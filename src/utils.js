@@ -38,10 +38,10 @@ export class Utils {
 
   loadSound() {
     const sound = new Howl({
-      // src: ["/src/music/start.mp3"],
-      src: [
-        "https://redirector.googlevideo.com/videoplayback?expire=1639522802&ei=kc24Ya6fO6mJ6dsPkKWA8Ak&ip=94.130.69.32&id=o-AHQ5OQNi5JEAAmAMW9YsX3VSZJjbvuxCaMNPRNYx2xzX&itag=22&source=youtube&requiressl=yes&mh=Rd&mm=31%2C26&mn=sn-4g5edn6y%2Csn-f5f7lne6&ms=au%2Conr&mv=m&mvi=3&pl=22&initcwndbps=516250&vprv=1&mime=video%2Fmp4&cnr=14&ratebypass=yes&dur=235.961&lmt=1630179846941539&mt=1639500793&fvip=3&fexp=24001373%2C24007246&c=ANDROID&txp=5532434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRQIhAPmt3ZKDfRPWlP_ZHZnnYhfk9T0urHDBqhe3dphRvxW6AiB0gZsiaR7jSeHFv6ulMS1mCwCH_O1DOPrWEMHbtgwpHw%3D%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRQIhAPH6Sdfl5A-izBXbzxQaY7LIyJZJ0F_fpK7GtZqn4TyLAiBjubyi03YOP9hDvXsBMFzEQyeCGfwMO14bH7cAEv8yAg%3D%3D&host=rr3---sn-4g5edn6y.googlevideo.com&title=yt5s.com-RED%20VELVET%20-%20'FUTURE'%20(%EB%AF%B8%EB%9E%98)%20[Start-Up%20OST%20Part.1]%20Lyrics%20[Color%20Coded_Han_Rom_Eng]",
-      ],
+      src: ["/src/music/start.mp3"],
+      // src: [
+      //   "https://redirector.googlevideo.com/videoplayback?expire=1639737653&ei=1RS8YYf3OMf9gAeNt7GIBA&ip=207.154.216.138&id=o-ADLxRuFx7sG8GJi69TqmbDeiKfpny2zqdFnRPYkcAuAa&itag=22&source=youtube&requiressl=yes&mh=sj&mm=31%2C29&mn=sn-5hneknee%2Csn-5hne6nsd&ms=au%2Crdu&mv=m&mvi=1&pl=21&initcwndbps=263750&vprv=1&mime=video%2Fmp4&cnr=14&ratebypass=yes&dur=261.061&lmt=1631007751599951&mt=1639715828&fvip=1&fexp=24001373%2C24007246&c=ANDROID&txp=5432434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRQIhAJiKT7lr7Z396pEHP2W6nn-0Z1VsKu4W7zs-GJZrHNLFAiB5dXyo644gr93UWQT7XLJUVgpxYN1GX9_q7J3jXYkm6g%3D%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRgIhAI9vV-yfiy8S6SovNjN-SY7-iMVYe5UPtcmXMxMKf5ZBAiEAvXQtun4XXd3_nEjmRh3un3oLlx4VbiYP5kpC3vW_Aro%3D&host=rr1---sn-5hneknee.googlevideo.com&title=yt5s.com-%E3%80%90Vietsub%E3%80%91Yoru%20ni%20Kakeru%20(%E5%A4%9C%E3%81%AB%E9%A7%86%E3%81%91%E3%82%8B)%20%7C%20YOASOBI",
+      // ],
       html5: true,
     });
     return sound;

@@ -11,13 +11,20 @@ export class UI {
   result = document.querySelector("#result");
   moveBall = document.querySelector("#move");
   target = document.querySelector("#target");
+  point = document.querySelector("#point");
 
   playGame() {
     this.timer.classList.add("play");
     this.target.classList.add("target");
+    this.point.classList.add("point");
+    this.point.innerHTML = "0";
   }
 
-  showResult(status) {
+  showPoint(point) {
+    this.point.innerHTML = point;
+  }
+
+  showResult(status, combo = 0) {
     let _status =
       status === 0
         ? "miss"
@@ -27,7 +34,9 @@ export class UI {
         ? "cool"
         : "good";
     this.result.className = "";
-    this.result.classList.add("fade-in", "result", _status);
+    _status = status === 1 && combo > 1 ? `${_status} X${combo}` : _status;
+    let _class = _status.split(" ")[0];
+    this.result.classList.add("fade-in", "result", _class);
     this.result.innerHTML = _status;
   }
 
