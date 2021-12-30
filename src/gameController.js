@@ -2,6 +2,7 @@ import { Utils } from "./utils.js";
 import { GameHandler } from "./gameHandler.js";
 import { UI } from "./ui.js";
 import { GameSystem } from "./gameSystem.js";
+import { Player } from "./player.js";
 export class GameController {
   start = false;
   gameControlChallenge = null;
@@ -15,6 +16,7 @@ export class GameController {
   point = 0;
 
   gameHandler;
+  player;
   utils;
   ui;
   sound;
@@ -24,6 +26,11 @@ export class GameController {
   constructor() {
     this.utils = new Utils();
     this.ui = new UI();
+    this.gameHandler = GameHandler.getInstance();
+  }
+
+  menu() {
+    this.gameHandler.menuScene();
   }
 
   ranndomTurnChallenge() {
@@ -33,13 +40,14 @@ export class GameController {
     return challenge;
   }
 
-  async gameStart() {
+  async gameStart(name) {
     if (this.start) {
       return;
     }
     this.start = true;
+    this.player = new Player("girl");
     await this.loadgameHandler();
-    await this.gameHandler.standAnimation("girl");
+    await this.player.standAnimation("girl");
     this.sound = this.utils.loadSound();
     this.sound.play();
     this.startGamePlay();
@@ -70,7 +78,7 @@ export class GameController {
         this.timeUp = true;
         this.playAnwser = [];
         if (!this.pressSpace) {
-          this.gameHandler.standAnimation("girl");
+          this.player.standAnimation();
           this.ui.showResult(this.status);
         }
       }, 3000);
@@ -78,9 +86,8 @@ export class GameController {
   }
 
   async loadgameHandler() {
-    this.gameHandler = new GameHandler();
     this.gameHandler.initScene();
-    await this.gameHandler.loadModel(["girl"]);
+    await this.player.loadModel();
   }
 
   checkMiss() {
@@ -92,7 +99,7 @@ export class GameController {
       this.ui.showResult(this.status);
       this.ui.miss(this.playAnwser.length - 1);
       this.combo = 0;
-      return this.gameHandler.standAnimation("girl");
+      return this.player.standAnimation();
     }
 
     if (
@@ -106,7 +113,7 @@ export class GameController {
       this.playAnwser = [];
       this.ui.showResult(this.status);
       this.combo = 0;
-      return this.gameHandler.standAnimation("girl");
+      return this.player.standAnimation();
     }
 
     return this.ui.showChallengeColor(this.playAnwser.length - 1, 1);
@@ -120,7 +127,7 @@ export class GameController {
       this.playAnwser = [];
       this.ui.showResult(this.status);
       this.combo = 0;
-      return this.gameHandler.standAnimation("girl");
+      return this.player.standAnimation("girl");
     }
     this.status = false;
     this.timeUp = true;
@@ -144,13 +151,13 @@ export class GameController {
         ? GameSystem.point / 10
         : Math.floor(GameSystem.point / target);
     point = point > GameSystem.point ? GameSystem.point : point;
-    
+
     this.increasePoint(this.point, this.point + point);
     this.point += point;
 
     this.ui.showResult(this.status, this.combo);
     this.combo > 2 && this.gameHandler.moveCamera();
-    return this.gameHandler.playAnimation("girl");
+    return this.player.playAnimation();
   }
 
   listenKeyBoard() {
@@ -165,10 +172,6 @@ export class GameController {
         }
       }
     };
-  }
-
-  moveCamera() {
-    this.gameHandler.moveCamera();
   }
 
   increasePoint(min, max) {

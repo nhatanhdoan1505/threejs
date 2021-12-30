@@ -29,5 +29,5 @@ export const GameSystem = {
     perfect: 100,
     cool: 200,
   },
-  point: 10000,
+  point: 1000,
 };
