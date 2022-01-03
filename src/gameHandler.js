@@ -6,7 +6,8 @@ import { Utils } from "./utils.js";
 
 export class GameHandler {
   scene = new Scene();
-  gamePlay;
+  playerList;
+  playerIndex = 0;
   utils = new Utils();
 
   static _instance = new GameHandler();
@@ -22,14 +23,39 @@ export class GameHandler {
 
   async startGame() {
     await this.scene.loadScene();
-    console.log("Switch");
-    this.scene.switchScene(0);
+    await this.loadMenuScene();
+
+    this.scene.switchScene(1);
+  }
+
+  prevCharacter() {
+    const objectName = this.playerList[this.playerIndex].name;
+    console.log(objectName);
+    let object = this.scene.scene.getObjectByName(objectName);
+    console.log(object);
+    this.scene.scene.remove(object);
+  }
+
+  async loadMenuScene() {
+    const characterList = Object.keys(GameSystem.characters);
+    const modelList = await this.loadModel(characterList);
+
+    this.playerList = modelList;
+
+    const player = this.playerList[this.playerIndex];
+    player.scale.setScalar(4);
+    this.scene.menuScene.add(player);
+    // modelList.map((model, index) => {
+    //   model.scale.setScalar(4);
+    //   model.position.setX(positions[index]);
+    //   console.log("add");
+    //   this.scene.menuScene.add(model);
+    // });
   }
 
   handlerModel(data) {
     return new Promise((resolve, reject) => {
       this.utils.load3DModel(data.path).then((model) => {
-        model.scale.setScalar(1);
         model.traverse((child) => {
           if (child.isMesh) {
             child.castShadow = true;
@@ -69,10 +95,11 @@ export class GameHandler {
     });
 
     const modelHandler = await Promise.all(modelHandlerPromiseList);
-    modelHandler.map((model, index) => {
-      model.position.setX(positions[index]);
-      this.scene.mainScene.add(model);
-    });
+    // modelHandler.map((model, index) => {
+    //   model.position.setX(positions[index]);
+    //   this.scene.mainScene.add(model);
+    // });
+    return modelHandler;
   }
 
   loadAnimation(character) {

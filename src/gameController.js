@@ -181,6 +181,12 @@ export class GameController {
       this.ui.showPoint(min);
     }, 10);
   }
+
+  prevCharacter() {
+    return this.gameHandler.prevCharacter();
+  }
+
+  nextCharacter() {}
 }
 
 const game = new GameController();

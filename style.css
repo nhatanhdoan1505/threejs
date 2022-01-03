@@ -248,3 +248,79 @@ button {
 .transparent {
   display: none;
 }
+
+.container {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+}
+
+.input-name {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.webflow-style-input {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.webflow-style-input > input {
+  width: 300px;
+  height: 30px;
+  border: 1px solid #fff8f3;
+  background-color: #0f0e0e;
+  padding-left: 15px;
+  color: white;
+}
+
+.webflow-style-input > button {
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  color: #fff8f3;
+}
+
+.webflow-style-input > button:hover {
+  cursor: pointer;
+}
+
+.choose-character {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -50%);
+}
+
+.next-btn {
+  text-align: center;
+  padding: 5px;
+  width: 50px;
+  border: 1px solid white;
+  color: white;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.next-btn:hover {
+  background-color: white;
+  color: black;
+}
+
+.prev-next {
+  color: white;
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prev-next > i {
+  cursor: pointer;
+}

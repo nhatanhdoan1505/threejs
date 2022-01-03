@@ -35,8 +35,8 @@ export class Scene {
   isMoveCamera = false;
   moveDirection = 1;
 
+  welcomeScene = new THREE.Scene();
   menuScene = new THREE.Scene();
-  waitingRoomScene = new THREE.Scene();
   mainScene = new THREE.Scene();
 
   sceneNumber;
@@ -49,8 +49,9 @@ export class Scene {
   }
 
   async loadScene() {
-    await this.loadMenuScene();
+    await this.loadWelcomeScene();
     await this.loadMainScene();
+    await this.loadMenuScene();
   }
 
   switchScene(numberScene) {
@@ -68,8 +69,21 @@ export class Scene {
         this.camera.lookAt(this.scene.position);
         this.renderModel = new RenderPass(this.scene, this.camera);
         this.composer.addPass(this.renderModel);
-        this.scene = this.menuScene;
+        this.scene = this.welcomeScene;
         this.sceneNumber = 0;
+        this.render();
+        break;
+      case 1:
+        this.scene = this.menuScene;
+        this.camera = new THREE.PerspectiveCamera(
+          20,
+          window.innerWidth / window.innerHeight,
+          1,
+          50000
+        );
+        this.camera.position.set(0, 700, 7000);
+        this.camera.lookAt(this.scene.position);
+        this.sceneNumber = 1;
         this.render();
         break;
       case 2:
@@ -95,10 +109,11 @@ export class Scene {
     });
   }
 
-  loadMenuScene() {
+  loadWelcomeScene() {
     return new Promise(async (resolve, reject) => {
       this.parent = new THREE.Object3D();
-      let { meshes, clonemeshes, meshList } = await this.utils.loadMenuScene();
+      let { meshes, clonemeshes, meshList } =
+        await this.utils.loadWelcomeScene();
       meshList.map((mesh) => mesh.map((m) => this.parent.add(m)));
       this.clonemeshes = clonemeshes.reduce((a, b) => a.concat(b));
       this.meshes = meshes;
@@ -127,11 +142,27 @@ export class Scene {
       this.composer.addPass(effectFilm);
       this.composer.addPass(this.effectFocus);
 
-      this.menuScene.add(this.parent);
+      this.welcomeScene.add(this.parent);
 
       console.log("load menu");
       resolve(true);
     });
+  }
+
+  loadMenuScene() {
+    const dirLight = new THREE.DirectionalLight(0xffffff);
+    dirLight.position.set(0, 200, 100);
+    dirLight.castShadow = true;
+    dirLight.shadow.camera.top = 180;
+    dirLight.shadow.camera.bottom = -100;
+    dirLight.shadow.camera.left = -120;
+    dirLight.shadow.camera.right = 120;
+
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
+    hemiLight.position.set(0, 200, 0);
+
+    this.menuScene.add(dirLight);
+    this.menuScene.add(hemiLight);
   }
 
   createOrbitControl() {

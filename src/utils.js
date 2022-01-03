@@ -169,7 +169,7 @@ export class Utils {
     });
   }
 
-  async loadMenuScene() {
+  async loadWelcomeScene() {
     let loadMesh = [];
     let objMale = await this.loadObjMale("/src/model/OBJ/Male/male02.obj");
     let objFemale = await this.loadObjFeMale(
