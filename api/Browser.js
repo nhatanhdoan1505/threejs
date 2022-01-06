@@ -7,7 +7,7 @@ class Browser {
   async startBrowser() {
     try {
       this.browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         args: ["--disable-setuid-sandbox"],
         ignoreHTTPSErrors: true,
       });
@@ -16,7 +16,7 @@ class Browser {
     }
   }
 
-  openPage(url) {
+  getLink(url) {
     return new Promise(async (resolve, reject) => {
       await this.startBrowser();
       if (!this.browser) return;
@@ -28,10 +28,9 @@ class Browser {
           const html = await page.content();
           const $ = cheerio.load(html);
           let link = $("#asuccess");
-          console.log($(link).attr("href"));
           resolve($(link).attr("href"));
-        }, 2000);
-      }, 3000);
+        }, 5000);
+      }, 5000);
     });
   }
 }

@@ -40,7 +40,27 @@
             <i class="fa fa-chevron-left" aria-hidden="true" onClick="game.prevCharacter()"></i>
             <i class="fa fa-chevron-right" aria-hidden="true" onClick="game.nextCharacter()"></i>
         </div>
-        <div class="next-btn"><strong>Next</strong></div>
+        <div class="next-btn"><strong>Play</strong></div>
+    </div>
+    <div class="music-sidebar">
+        <input type="text" placeholder="Enter a song" oninput="game.onChangeMusicSideBar()" id="musicInput" />
+        <div class="video-container" id="video-container">
+            <!-- <div class="video">
+                <img
+                    src="https://i.ytimg.com/vi/IhIb2vPSLBU/hq720.jpg?sqp=-oaymwEjCOgCEMoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLCfzKeiQ24u947Qw7CCCMxvuem86g" />
+                <div class="video-content">
+                    <strong>BINZ x PHUONG LY - SO CLOSE [ OFFICIAL MV ]</strong>
+                    <p>SpaceSpeakers</p>
+                    <div id="icon-container">
+                        <div class="equalizer">
+                            <span class="col-1"></span><span class="col-2"></span><span class="col-3"></span><span
+                                class="col-4"></span><span class="col-5"></span>
+                        </div>
+                        <div class="loader"></div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
     </div>
     <h1 id="result"></h1>
     <h1 id="point"></h1>

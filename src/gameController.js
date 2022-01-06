@@ -20,6 +20,15 @@ export class GameController {
   utils;
   ui;
   sound;
+  music;
+
+  musicList = [];
+  curentMusic;
+
+  isClickGetLink = false;
+
+  period = 2000;
+  timeOutInput;
 
   clock;
 
@@ -29,9 +38,9 @@ export class GameController {
     this.gameHandler = GameHandler.getInstance();
   }
 
-  menu() {
-    this.gameHandler.menuScene();
-  }
+  // menu() {
+  //   this.gameHandler.menuScene();
+  // }
 
   ranndomTurnChallenge() {
     let challenge = new Array(this.utils.randomNumber(3, 8)).fill(0);
@@ -186,7 +195,51 @@ export class GameController {
     return this.gameHandler.prevCharacter();
   }
 
-  nextCharacter() {}
+  nextCharacter() {
+    return this.gameHandler.nextCharacter();
+  }
+
+  onChangeMusicSideBar() {
+    clearTimeout(this.timeOutInput);
+    this.timeOutInput = setTimeout(() => {
+      this.ui.requestMusic();
+    }, this.period);
+  }
+
+  async onClickMusic(id) {
+    if (this.isClickGetLink) return;
+    if (this.curentMusic === id) return;
+    if (this.curentMusic) this.ui.removeEqualizerAnimation(this.curentMusic);
+    if (this.musicList.some((m) => m.id === id)) {
+      if (this.sound) this.sound.stop();
+      let link = this.musicList.find((m) => m.id === id).link;
+      this.sound = this.utils.loadSound(link);
+      this.sound.play();
+      this.ui.equalizerAnimation(id);
+      return;
+    }
+    this.isClickGetLink = true;
+    this.ui.loadingAnimation(id);
+    let res = await fetch("http://localhost:3000/api/links", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({ id }),
+    });
+
+    let linkJson = await res.json();
+    let link = linkJson.data.link;
+    this.music = link;
+    if (this.sound) this.sound.stop();
+    this.sound = this.utils.loadSound(this.music);
+    this.sound.play();
+    this.ui.equalizerAnimation(id);
+    this.musicList.push({ id, link });
+    this.curentMusic = id;
+    this.isClickGetLink = false;
+  }
 }
 
 const game = new GameController();

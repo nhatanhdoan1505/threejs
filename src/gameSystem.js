@@ -17,7 +17,10 @@ export const GameSystem = {
     zombie: {
       name: "zombie",
       path: "/src/model/zombie/zombie.fbx",
-      animations: ["/src/model/zombie/animation/hiphop.fbx"],
+      animations: [
+        "/src/model/zombie/animation/standing.fbx",
+        "/src/model/zombie/animation/hiphop1.fbx",
+      ],
     },
   },
   position: {

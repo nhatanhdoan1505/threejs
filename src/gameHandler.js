@@ -5,7 +5,7 @@ import { Scene } from "./scene.js";
 import { Utils } from "./utils.js";
 
 export class GameHandler {
-  scene = new Scene();
+  sceneMgr = new Scene();
   playerList;
   playerIndex = 0;
   utils = new Utils();
@@ -22,18 +22,40 @@ export class GameHandler {
   }
 
   async startGame() {
-    await this.scene.loadScene();
+    await this.sceneMgr.loadScene();
     await this.loadMenuScene();
 
-    this.scene.switchScene(1);
+    this.sceneMgr.switchScene(1);
   }
 
   prevCharacter() {
-    const objectName = this.playerList[this.playerIndex].name;
-    console.log(objectName);
-    let object = this.scene.scene.getObjectByName(objectName);
-    console.log(object);
-    this.scene.scene.remove(object);
+    if (this.playerIndex === 0) return;
+
+    const playerName = this.playerList[this.playerIndex].name;
+    let player = this.sceneMgr.menuScene.getObjectByName(playerName);
+    this.sceneMgr.menuScene.remove(player);
+
+    this.playerIndex -= 1;
+    let currentPlayer = this.playerList[this.playerIndex];
+    currentPlayer.scale.setScalar(4);
+    this.sceneMgr.menuScene.add(currentPlayer);
+    this.sceneMgr.switchScene(1);
+    this.playDemoAnimation(currentPlayer.name);
+  }
+
+  nextCharacter() {
+    if (this.playerIndex === this.playerList.length - 1) return;
+
+    const playerName = this.playerList[this.playerIndex].name;
+    let player = this.sceneMgr.menuScene.getObjectByName(playerName);
+    this.sceneMgr.menuScene.remove(player);
+
+    this.playerIndex += 1;
+    let currentPlayer = this.playerList[this.playerIndex];
+    currentPlayer.scale.setScalar(4);
+    this.sceneMgr.menuScene.add(currentPlayer);
+    this.sceneMgr.switchScene(1);
+    this.playDemoAnimation(currentPlayer.name);
   }
 
   async loadMenuScene() {
@@ -44,12 +66,13 @@ export class GameHandler {
 
     const player = this.playerList[this.playerIndex];
     player.scale.setScalar(4);
-    this.scene.menuScene.add(player);
+    this.sceneMgr.menuScene.add(player);
+    this.playAnimation(player.name);
     // modelList.map((model, index) => {
     //   model.scale.setScalar(4);
     //   model.position.setX(positions[index]);
     //   console.log("add");
-    //   this.scene.menuScene.add(model);
+    //   this.sceneMgr.menuScene.add(model);
     // });
   }
 
@@ -63,7 +86,7 @@ export class GameHandler {
           }
         });
         model.name = data.name;
-        this.scene.objects.push({
+        this.sceneMgr.objects.push({
           model,
           mixer: new THREE.AnimationMixer(model),
           name: data.name,
@@ -97,7 +120,7 @@ export class GameHandler {
     const modelHandler = await Promise.all(modelHandlerPromiseList);
     // modelHandler.map((model, index) => {
     //   model.position.setX(positions[index]);
-    //   this.scene.mainScene.add(model);
+    //   this.sceneMgr.mainScene.add(model);
     // });
     return modelHandler;
   }
@@ -109,59 +132,77 @@ export class GameHandler {
         this.animationHandler(path)
       );
       const animationHandler = await Promise.all(animationHandlerPromiseList);
-      let index = this.scene.objects.findIndex((o) => o.name === character);
-      this.scene.objects[index].animations = animationHandler;
+      let index = this.sceneMgr.objects.findIndex((o) => o.name === character);
+      this.sceneMgr.objects[index].animations = animationHandler;
+      resolve(true);
+    });
+  }
+
+  playDemoAnimation(character) {
+    const index = this.sceneMgr.objects.findIndex((o) => o.name === character);
+    return new Promise((resolve, reject) => {
+      this.sceneMgr.objects[index].mixer.stopAllAction();
+      const { animations } = this.sceneMgr.objects[index];
+      console.log(animations);
+      this.sceneMgr.objects[index].idle = this.sceneMgr.objects[
+        index
+      ].mixer.clipAction(
+        animations[this.utils.randomNumber(1, animations.length)]
+      );
+      this.sceneMgr.objects[index].idle.play();
       resolve(true);
     });
   }
 
   playAnimation(character) {
-    const index = this.scene.objects.findIndex((o) => o.name === character);
-    if (!this.scene.isFirstDance) {
-      const step = Date.now() - this.scene.startAnim;
-      if (step < this.scene.duration) return;
+    const index = this.sceneMgr.objects.findIndex((o) => o.name === character);
+    if (!this.sceneMgr.isFirstDance) {
+      const step = Date.now() - this.sceneMgr.startAnim;
+      if (step < this.sceneMgr.duration) return;
     }
 
     return new Promise((resolve, reject) => {
-      this.scene.objects[index].mixer.stopAllAction();
-      const { animations } = this.scene.objects[index];
-      this.scene.objects[index].idle = this.scene.objects[
+      this.sceneMgr.objects[index].mixer.stopAllAction();
+      const { animations } = this.sceneMgr.objects[index];
+      this.sceneMgr.objects[index].idle = this.sceneMgr.objects[
         index
       ].mixer.clipAction(
         animations[this.utils.randomNumber(1, animations.length)]
       );
-      this.scene.startAnim = Date.now();
-      this.scene.objects[index].idle.play();
-      this.scene.duration =
-        +this.scene.objects[index].idle._clip.duration * 1000;
-      this.scene.isFirstDance = false;
+      this.sceneMgr.startAnim = Date.now();
+      this.sceneMgr.objects[index].idle.play();
+      this.sceneMgr.duration =
+        +this.sceneMgr.objects[index].idle._clip.duration * 1000;
+      this.sceneMgr.isFirstDance = false;
       resolve(true);
     });
   }
 
   standAnimation(character) {
     return new Promise((resolve, reject) => {
-      const index = this.scene.objects.findIndex((o) => o.name === character);
-      this.scene.objects[index].mixer.stopAllAction();
-      const { animations } = this.scene.objects[index];
-      this.scene.objects[index].idle = this.scene.objects[
+      const index = this.sceneMgr.objects.findIndex(
+        (o) => o.name === character
+      );
+      this.sceneMgr.objects[index].mixer.stopAllAction();
+      const { animations } = this.sceneMgr.objects[index];
+      this.sceneMgr.objects[index].idle = this.sceneMgr.objects[
         index
       ].mixer.clipAction(animations[0]);
-      this.scene.objects[index].idle.play();
-      this.scene.isFirstDance = true;
+      this.sceneMgr.objects[index].idle.play();
+      this.sceneMgr.isFirstDance = true;
       resolve(true);
     });
   }
 
   moveCamera() {
     let randomDirection = Math.floor(Math.random() * 2);
-    this.scene.moveDirection = randomDirection === 0 ? -1 : 1;
-    this.scene.isMoveCamera = true;
+    this.sceneMgr.moveDirection = randomDirection === 0 ? -1 : 1;
+    this.sceneMgr.isMoveCamera = true;
     setTimeout(() => this.stopMoveCamera(), 4000);
   }
 
   stopMoveCamera() {
-    this.scene.isMoveCamera = false;
-    this.scene.setPositionCamera();
+    this.sceneMgr.isMoveCamera = false;
+    this.sceneMgr.setPositionCamera();
   }
 }

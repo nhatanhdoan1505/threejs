@@ -252,7 +252,7 @@ export class Scene {
     });
   }
 
-  menuSceneAnimation(delta) {
+  welcomeSceneAnimation(delta) {
     delta = delta < 2 ? delta : 2;
     this.parent.rotation.y += -0.02 * delta;
     for (let j = 0; j < this.clonemeshes.length; j++) {
@@ -356,7 +356,7 @@ export class Scene {
     let delta = this.clock.getDelta();
 
     if (this.composer && this.sceneNumber === 0)
-      this.menuSceneAnimation(delta * 10);
+      this.welcomeSceneAnimation(delta * 10);
 
     this.objectAnimation(delta);
 

@@ -12,6 +12,17 @@ export class UI {
   moveBall = document.querySelector("#move");
   target = document.querySelector("#target");
   point = document.querySelector("#point");
+  musicInput = document.querySelector("#musicInput");
+  musicContainer = document.querySelector("#video-container");
+
+  iconContainer;
+
+  equalizer = ` <div class="equalizer">
+  <span class="col-1"></span><span class="col-2"></span><span class="col-3"></span><span
+      class="col-4"></span><span class="col-5"></span>
+</div>`;
+
+  loading = `<div class="loader"></div>`;
 
   playGame() {
     this.timer.classList.add("play");
@@ -58,5 +69,59 @@ export class UI {
     for (let i in spanList) {
       if (+i > index) spanList[i].classList.add("miss");
     }
+  }
+
+  async requestMusic() {
+    let keyword = this.musicInput.value;
+    if (!keyword) return;
+    let res = await fetch("http://localhost:3000/api/keyword", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({ keyword }),
+    });
+    let musicListJson = await res.json();
+    let musicList = musicListJson.videoList;
+    let videoHtml = musicList.map(
+      (music) => `<div class="video" onclick="game.onClickMusic('${
+        music.id
+      }')" >
+    <img
+        src="${music.thumbnail}" />
+    <div class="video-content"  />
+        <strong>${
+          music.title.length > 50
+            ? music.title.slice(0, 50) + "..."
+            : music.title
+        }</strong>
+        <p>${
+          music.channel.length > 50
+            ? music.channel.slice(0, 50) + "..."
+            : music.channel
+        }</p>
+        <div id="ID${music.id}"></div>
+    </div>
+</div>`
+    );
+
+    this.musicContainer.innerHTML = videoHtml.join("");
+  }
+
+  loadingAnimation(id) {
+    console.log(id);
+    this.iconContainer = document.querySelector(`#ID${id}`);
+    this.iconContainer.innerHTML = this.loading;
+  }
+
+  equalizerAnimation(id) {
+    this.iconContainer = document.querySelector(`#ID${id}`);
+    this.iconContainer.innerHTML = this.equalizer;
+  }
+
+  removeEqualizerAnimation(id) {
+    this.iconContainer = document.querySelector(`#ID${id}`);
+    if (this.iconContainer) this.iconContainer.innerHTML = null;
   }
 }
