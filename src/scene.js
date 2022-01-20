@@ -43,6 +43,10 @@ export class Scene {
 
   utils = new Utils();
 
+  numberSceneLoaded = 0;
+
+  waitingSwitchScene;
+
   constructor() {
     this.createScene();
     this.createRenderer();
@@ -57,54 +61,76 @@ export class Scene {
   switchScene(numberScene) {
     switch (numberScene) {
       case 0:
-        this.scene.background = new THREE.Color(0x000104);
-        this.scene.fog = new THREE.FogExp2(0x000104, 0.0000675);
-        this.camera = new THREE.PerspectiveCamera(
-          20,
-          window.innerWidth / window.innerHeight,
-          1,
-          50000
-        );
-        this.camera.position.set(0, 700, 7000);
-        this.camera.lookAt(this.scene.position);
-        this.renderModel = new RenderPass(this.scene, this.camera);
-        this.composer.addPass(this.renderModel);
-        this.scene = this.welcomeScene;
-        this.sceneNumber = 0;
-        this.render();
+        this.clearScene();
+        this.waitingSwitchScene = setInterval(() => {
+          if (this.scene.children.length === 0) {
+            this.scene.background = new THREE.Color(0x000104);
+            this.scene.fog = new THREE.FogExp2(0x000104, 0.0000675);
+            this.camera = new THREE.PerspectiveCamera(
+              20,
+              window.innerWidth / window.innerHeight,
+              1,
+              50000
+            );
+            this.camera.position.set(0, 700, 7000);
+            this.camera.lookAt(this.scene.position);
+            this.renderModel = new RenderPass(this.scene, this.camera);
+            this.composer.addPass(this.renderModel);
+            this.scene = this.welcomeScene;
+            this.sceneNumber = 0;
+            this.render();
+            clearInterval(this.waitingSwitchScene);
+          }
+        }, 1000);
         break;
       case 1:
-        this.scene = this.menuScene;
-        this.camera = new THREE.PerspectiveCamera(
-          20,
-          window.innerWidth / window.innerHeight,
-          1,
-          50000
-        );
-        this.camera.position.set(0, 700, 7000);
-        this.camera.lookAt(this.scene.position);
-        this.sceneNumber = 1;
-        this.render();
+        this.clearScene();
+        this.waitingSwitchScene = setInterval(() => {
+          if (this.scene.children.length === 0) {
+            this.scene = this.menuScene;
+            this.camera = new THREE.PerspectiveCamera(
+              20,
+              window.innerWidth / window.innerHeight,
+              1,
+              50000
+            );
+            this.camera.position.set(0, 700, 7000);
+            this.camera.lookAt(this.scene.position);
+            this.sceneNumber = 1;
+            this.render();
+            clearInterval(this.waitingSwitchScene);
+          }
+        }, 1000);
         break;
       case 2:
-        this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color(0x000104);
-        this.scene.fog = new THREE.FogExp2(0x000104, 0.0000675);
-
-        this.createOrbitControl();
-
-        this.scene = this.mainScene;
-        this.render();
+        this.clearScene();
+        this.waitingSwitchScene = setInterval(() => {
+          if (this.scene.children.length === 0) {
+            this.scene.background = new THREE.Color(0xa0a0a0);
+            this.scene.fog = new THREE.Fog(0xa0a0a0, 200, 1000);
+            this.scene = this.mainScene;
+            this.render();
+            clearInterval(this.waitingSwitchScene);
+          }
+        }, 1000);
+        break;
       default:
         break;
+    }
+  }
+
+  clearScene() {
+    while (this.scene.children.length > 0) {
+      this.scene.remove(this.scene.children[0]);
     }
   }
 
   loadMainScene() {
     return new Promise((resolve, reject) => {
       this.createLight();
-      this.createGround();
+      // this.createGround();
       console.log("load main");
+      this.numberSceneLoaded += 1;
       resolve(true);
     });
   }
@@ -144,7 +170,7 @@ export class Scene {
 
       this.welcomeScene.add(this.parent);
 
-      console.log("load menu");
+      this.numberSceneLoaded += 1;
       resolve(true);
     });
   }
@@ -163,6 +189,8 @@ export class Scene {
 
     this.menuScene.add(dirLight);
     this.menuScene.add(hemiLight);
+
+    this.numberSceneLoaded += 1;
   }
 
   createOrbitControl() {

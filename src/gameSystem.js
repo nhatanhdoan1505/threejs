@@ -23,6 +23,7 @@ export const GameSystem = {
       ],
     },
   },
+  stage: [{ name: "school", path: "/src/model/stage/stage_1/scene.gltf" }],
   position: {
     1: [1],
     2: [-100, 100],

@@ -18,54 +18,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Readex+Pro:wght@500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="./style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dongle&family=Permanent+Marker&family=Readex+Pro:wght@500&display=swap"
+        rel="stylesheet">
 </head>
 
 <body onload="">
     <div id="container"></div>
-    <!-- <div class="input-name">
+    <div class="input-name" id="input-name-area">
         <div class="webflow-style-input">
             <input class="" type="text" placeholder="What's your name?"></input>
-            <button type="submit"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
+            <button type="submit"><i class="fa fa-angle-right" aria-hidden="true"
+                    onClick="game.sceneMenu()"></i></button>
         </div>
-    </div> -->
+    </div>
 
-    <div class="choose-character">
+    <div class="choose-character" id="choose-character">
         <div class="prev-next">
             <i class="fa fa-chevron-left" aria-hidden="true" onClick="game.prevCharacter()"></i>
             <i class="fa fa-chevron-right" aria-hidden="true" onClick="game.nextCharacter()"></i>
         </div>
-        <div class="next-btn"><strong>Play</strong></div>
+        <div class="next-btn" onClick="game.gameStart()"><strong>Play</strong></div>
     </div>
-    <div class="music-sidebar">
+    <div class="music-sidebar" id="music-sidebar">
         <input type="text" placeholder="Enter a song" oninput="game.onChangeMusicSideBar()" id="musicInput" />
         <div class="video-container" id="video-container">
-            <!-- <div class="video">
-                <img
-                    src="https://i.ytimg.com/vi/IhIb2vPSLBU/hq720.jpg?sqp=-oaymwEjCOgCEMoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLCfzKeiQ24u947Qw7CCCMxvuem86g" />
-                <div class="video-content">
-                    <strong>BINZ x PHUONG LY - SO CLOSE [ OFFICIAL MV ]</strong>
-                    <p>SpaceSpeakers</p>
-                    <div id="icon-container">
-                        <div class="equalizer">
-                            <span class="col-1"></span><span class="col-2"></span><span class="col-3"></span><span
-                                class="col-4"></span><span class="col-5"></span>
-                        </div>
-                        <div class="loader"></div>
-                    </div>
-                </div>
-            </div> -->
         </div>
     </div>
-    <h1 id="result"></h1>
-    <h1 id="point"></h1>
-    <div class="timer">
-        <div id="target"></div>
+    <div id="game-over" class="game-over">
+        <h1>You Win</h1>
+        <h1 class="result-score" id="result-score">1000</h1>
+        <div class="button-group">
+            <div id="replay" onClick="game.restartGame()">Replay</div>
+            <div id="back-room" onClick="game.backToRoom()">Back to Room</div>
+        </div>
+    </div>
+    <div id="result">
+    </div>
+    <h1 id="point" class="point"></h1>
+    <div class="timer play">
+        <div id="target" class="target"></div>
         <span id="move">
         </span>
     </div>

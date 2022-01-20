@@ -1,4 +1,5 @@
 import { FBXLoader } from "./lib/three.js/examples/jsm/loaders/FBXLoader.js";
+import { GLTFLoader } from "./lib/three.js/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "./lib/three.js/build/three.module.js";
 import { OBJLoader } from "./lib/three.js/examples/jsm/loaders/OBJLoader.js";
 
@@ -6,6 +7,26 @@ export class Utils {
   async load3DModel(path) {
     return new Promise(function (resolve, reject) {
       const loaders = new FBXLoader();
+      loaders.load(
+        path,
+        (object) => {
+          resolve(object);
+        },
+        (xhr) => {
+          console.log(
+            "The car model is " + (xhr.loaded / xhr.total) * 100 + "% loaded"
+          );
+        },
+        (err) => {
+          console.log("An error happened in loading car model: " + err);
+        }
+      );
+    });
+  }
+
+  async load3DModelGLTF(path) {
+    return new Promise(function (resolve, reject) {
+      const loaders = new GLTFLoader();
       loaders.load(
         path,
         (object) => {

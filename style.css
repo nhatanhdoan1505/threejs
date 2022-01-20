@@ -16,19 +16,20 @@ body {
 }
 
 .play {
-  border: 1px solid #4e1f9d;
+  border: 1px solid white;
 }
 
 .challenge > span {
   font-size: 2rem;
   width: 50px;
   height: 50px;
-  border: 1px solid black;
+  border: 1px solid white;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
   margin: 10px;
+  color: white;
 }
 
 button {
@@ -78,11 +79,12 @@ button {
 .timer {
   width: 200px;
   height: 20px;
-  position: relative;
+  position: absolute;
   top: 70%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 100;
+  visibility: hidden;
   /* border: 1px solid #4e1f9d; */
 }
 
@@ -92,16 +94,17 @@ button {
   background: linear-gradient(to left, #c33764, #1d2671);
   position: absolute;
   left: 80%;
+  visibility: hidden;
 }
 
-.timer::after {
+/* .timer::after {
   content: "";
   position: absolute;
   top: 0;
   left: -30px;
   width: 28px;
   height: 100%;
-  background-color: white;
+  background-color: black;
 }
 
 .timer::before {
@@ -111,11 +114,11 @@ button {
   left: 202px;
   width: 30px;
   height: 100%;
-  background-color: white;
-}
+  background-color: black;
+} */
 
 .movementBall {
-  color: #4e1f9d;
+  color: white;
   position: absolute;
   top: 15%;
   left: -5%;
@@ -173,21 +176,24 @@ button {
 
 .fade-in {
   opacity: 1;
-  animation-name: fadeInOpacity;
-  animation-iteration-count: 1;
-  animation-timing-function: ease-in;
-  animation-duration: 1s;
+  animation: fadeInOpacity 0.8s linear 0.5s 1 normal forwards;
 }
 
 @keyframes fadeInOpacity {
   0% {
     opacity: 0;
   }
+  25% {
+    opacity: 0.5;
+  }
   50% {
+    opacity: 1;
+  }
+  75% {
     opacity: 0.5;
   }
   100% {
-    opacity: 1;
+    opacity: 0;
   }
 }
 
@@ -200,6 +206,7 @@ button {
   font-family: "Readex Pro", sans-serif;
   letter-spacing: 5px;
   color: #f05454;
+  visibility: hidden;
 }
 
 .background {
@@ -299,6 +306,7 @@ button {
   flex-direction: column;
   align-items: center;
   transform: translate(-50%, -50%);
+  visibility: hidden;
 }
 
 .next-btn {
@@ -335,6 +343,7 @@ button {
   max-width: 300px;
   height: 90%;
   color: white;
+  visibility: hidden;
 }
 
 .music-sidebar > input {
@@ -445,5 +454,102 @@ button {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+#input-name-area {
+  visibility: hidden;
+}
+
+.game-over {
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(to left, #eecda3, #ef629f);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+  max-width: 300px;
+  height: 50%;
+  border-radius: 6px;
+  color: white;
+  font-family: "Permanent Marker", cursive;
+  letter-spacing: 5px;
+}
+
+.drop-down {
+  animation: drop-down 0.8s linear 0.5s 1 normal forwards;
+}
+
+.result-score {
+  margin-top: 80px;
+}
+
+.button-group {
+  display: flex;
+  max-width: 200px;
+  font-family: "Dongle", sans-serif;
+  letter-spacing: 1px;
+  align-items: center;
+  margin-top: 50px;
+  font-size: 1.3rem;
+}
+
+.button-group > #replay:hover {
+  background-color: white;
+  color: #ef629f;
+  cursor: pointer;
+}
+
+.button-group > #back-room:hover {
+  background-color: white;
+  color: #ef629f;
+  cursor: pointer;
+}
+
+.button-group > #replay {
+  border: 1px solid white;
+  padding: 1px 5px;
+}
+
+.button-group > #back-room {
+  margin-left: 5px;
+  border: 1px solid white;
+  padding: 1px 5px;
+}
+
+.fade-out {
+  animation: fade-out 0.8s linear 0.5s 1 normal forwards;
+}
+
+@keyframes drop-down {
+  34% {
+    top: 53%;
+  }
+  45% {
+    top: 47%;
+  }
+  56% {
+    top: 52%;
+  }
+  67% {
+    top: 48%;
+  }
+  78% {
+    top: 51%;
+  }
+  89% {
+    top: 49%;
+  }
+  100% {
+    top: 50%;
+  }
+}
+
+@keyframes fade-out {
+  100% {
+    top: -30%;
   }
 }

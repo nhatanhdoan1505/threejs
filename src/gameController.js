@@ -32,37 +32,91 @@ export class GameController {
 
   clock;
 
+  waitingFirstScene;
+
+  difficult = 0;
+  maxChallenge = 2;
+
   constructor() {
     this.utils = new Utils();
     this.ui = new UI();
     this.gameHandler = GameHandler.getInstance();
+    this.firstScene();
   }
 
-  // menu() {
-  //   this.gameHandler.menuScene();
-  // }
+  firstScene() {
+    this.waitingFirstScene = setInterval(() => {
+      if (this.gameHandler.haveLoadedScene) {
+        this.sceneWelcome();
+        clearInterval(this.waitingFirstScene);
+      }
+    }, 1000);
+  }
 
-  ranndomTurnChallenge() {
-    let challenge = new Array(this.utils.randomNumber(3, 8)).fill(0);
+  sceneWelcome() {
+    this.ui.refeshUI();
+    this.ui.inputNameControl();
+    this.gameHandler.switchScene(0);
+  }
+
+  sceneMenu() {
+    this.ui.refeshUI();
+    this.ui.chooseCharacterControl();
+    this.ui.musicSideBarControl();
+    this.gameHandler.switchScene(1);
+  }
+
+  ranndomTurnChallenge(min, max) {
+    let challenge = new Array(this.utils.randomNumber(min, max)).fill(0);
     challenge = challenge.map((c) => this.utils.randomDirection(this.keyCode));
 
     return challenge;
   }
 
-  async gameStart(name) {
+  async gameStart() {
     if (this.start) {
       return;
     }
-    this.start = true;
-    this.player = new Player("girl");
-    await this.loadgameHandler();
-    await this.player.standAnimation("girl");
-    this.sound = this.utils.loadSound();
+    let name = this.gameHandler.playerList[this.gameHandler.playerIndex].name;
+    this.gameHandler.switchScene(2);
+    // this.start = true;
+    this.player = !this.player ? new Player(name) : this.player;
+    if (this.sound) this.sound.stop();
+    this.ui.gameOverControl(this.point);
+    this.sound = !this.sound
+      ? this.utils.loadSound(this.music ? this.music : "/src/music/start.mp3")
+      : this.sound;
     this.sound.play();
+    this.ui.refeshUI();
     this.startGamePlay();
     this.sound.on("end", () => {
       this.stopGame();
     });
+  }
+
+  async restartGame() {
+    this.challenge = [];
+    this.playAnwser = [];
+    this.timeUp = true;
+    this.status = 0;
+    this.pressSpace = false;
+    this.combo = 0;
+    this.point = 0;
+    this.player.standAnimation();
+    if (this.sound) this.sound.stop();
+    this.sound.play();
+    this.ui.refeshUI();
+    this.ui.gameOverControl(0, true);
+    this.startGamePlay();
+    this.ui.gameOverControl();
+    this.sound.on("end", () => {
+      this.stopGame();
+    });
+  }
+
+  backToRoom() {
+    this.ui.stopGame();
+    this.sceneMenu();
   }
 
   stopGame() {
@@ -71,6 +125,11 @@ export class GameController {
     this.status = 0;
     this.playAnwser = [];
     clearInterval(this.gameControlChallenge);
+    this.ui.stopGame();
+    setTimeout(() => {
+      this.ui.gameOverControl(this.point);
+      this.start = false;
+    }, 1000);
   }
 
   startGamePlay() {
@@ -80,7 +139,13 @@ export class GameController {
       this.pressSpace = false;
       this.timeUp = false;
       this.status = 0;
-      this.challenge = this.ranndomTurnChallenge();
+      this.difficult += 0.3;
+      let max =
+        Math.floor(this.difficult) + this.maxChallenge > 8
+          ? 8
+          : Math.floor(this.difficult) + this.maxChallenge;
+      let min = max > 5 ? 3 : 1;
+      this.challenge = this.ranndomTurnChallenge(min, max);
       this.ui.showChallenge(this.challenge);
       this.listenKeyBoard();
       setTimeout(() => {
@@ -94,23 +159,16 @@ export class GameController {
     }, 5000);
   }
 
-  async loadgameHandler() {
-    this.gameHandler.initScene();
-    await this.player.loadModel();
-  }
+  // async loadGameHandler() {
+  //   this.gameHandler.initScene();
+  //   await this.player.loadModel();
+  // }
 
   checkMiss() {
-    if (this.playAnwser.length > this.challenge.length && !this.timeUp) {
-      this.status = 0;
-      this.timeUp = true;
-      this.status = 0;
-      this.playAnwser = [];
-      this.ui.showResult(this.status);
-      this.ui.miss(this.playAnwser.length - 1);
-      this.combo = 0;
-      return this.player.standAnimation();
+    if (this.playAnwser.length > this.challenge.length) {
+      this.playAnwser = this.playAnwser.slice(0, this.playAnwser.length - 1);
+      return;
     }
-
     if (
       this.challenge[this.playAnwser.length - 1] !==
       this.playAnwser[this.playAnwser.length - 1]
@@ -136,7 +194,7 @@ export class GameController {
       this.playAnwser = [];
       this.ui.showResult(this.status);
       this.combo = 0;
-      return this.player.standAnimation("girl");
+      return this.player.standAnimation();
     }
     this.status = false;
     this.timeUp = true;
@@ -165,7 +223,7 @@ export class GameController {
     this.point += point;
 
     this.ui.showResult(this.status, this.combo);
-    this.combo > 2 && this.gameHandler.moveCamera();
+    // this.combo > 2 && this.gameHandler.moveCamera();
     return this.player.playAnimation();
   }
 

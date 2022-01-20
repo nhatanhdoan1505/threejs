@@ -14,6 +14,11 @@ export class UI {
   point = document.querySelector("#point");
   musicInput = document.querySelector("#musicInput");
   musicContainer = document.querySelector("#video-container");
+  chooseCharacter = document.querySelector("#choose-character");
+  musicSideBar = document.querySelector("#music-sidebar");
+  inputNameArea = document.querySelector("#input-name-area");
+  gameOver = document.querySelector("#game-over");
+  resultScore = document.querySelector("#result-score");
 
   iconContainer;
 
@@ -25,10 +30,21 @@ export class UI {
   loading = `<div class="loader"></div>`;
 
   playGame() {
-    this.timer.classList.add("play");
-    this.target.classList.add("target");
-    this.point.classList.add("point");
+    this.timer.style.visibility = "visible";
+    this.target.style.visibility = "visible";
+    this.point.style.visibility = "visible";
+    this.timer.style.visibility = "visible";
+    this.div.style.visibility = "visible";
     this.point.innerHTML = "0";
+  }
+
+  stopGame() {
+    this.timer.style.visibility = "hidden";
+    this.target.style.visibility = "hidden";
+    this.point.style.visibility = "hidden";
+    this.timer.style.visibility = "hidden";
+    this.div.style.visibility = "hidden";
+    this.point.innerHTML = "";
   }
 
   showPoint(point) {
@@ -44,11 +60,12 @@ export class UI {
         : status === 2
         ? "cool"
         : "good";
-    this.result.className = "";
-    _status = status === 1 && combo > 1 ? `${_status} X${combo}` : _status;
+    this.result.innerHTML = "";
+    // this.result.className = "";
+    // _status = status === 1 && combo > 1 ? `${_status} X${combo}` : _status;
     let _class = _status.split(" ")[0];
-    this.result.classList.add("fade-in", "result", _class);
-    this.result.innerHTML = _status;
+    // this.result.classList.add("fade-in", "result", _class);
+    this.result.innerHTML = `<h1 class="fade-in result ${_class}">${_status}</h1>`;
   }
 
   showChallenge(challenge) {
@@ -123,5 +140,39 @@ export class UI {
   removeEqualizerAnimation(id) {
     this.iconContainer = document.querySelector(`#ID${id}`);
     if (this.iconContainer) this.iconContainer.innerHTML = null;
+  }
+
+  inputNameControl() {
+    if (this.inputNameArea.style.visibility === "hidden")
+      this.inputNameArea.style.visibility = "visible";
+    else this.inputNameArea.style.visibility = "hidden";
+  }
+
+  musicSideBarControl() {
+    if (this.musicSideBar.style.visibility === "hidden")
+      this.musicSideBar.style.visibility = "visible";
+    else this.musicSideBar.style.visibility = "hidden";
+  }
+
+  chooseCharacterControl() {
+    if (this.chooseCharacter.style.visibility === "hidden")
+      this.chooseCharacter.style.visibility = "visible";
+    else this.chooseCharacter.style.visibility = "hidden";
+  }
+
+  refeshUI() {
+    this.inputNameArea.style.visibility = "hidden";
+    this.musicSideBar.style.visibility = "hidden";
+    this.chooseCharacter.style.visibility = "hidden";
+  }
+
+  gameOverControl(point, isOut = false) {
+    if (isOut) {
+      this.gameOver.classList.remove("drop-down");
+      this.gameOver.classList.add("fade-out");
+    } else {
+      this.resultScore.innerHTML = point;
+      this.gameOver.classList.add("drop-down");
+    }
   }
 }

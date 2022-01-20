@@ -8,6 +8,9 @@ export class GameHandler {
   sceneMgr = new Scene();
   playerList;
   playerIndex = 0;
+  stageList = GameSystem.stage;
+  stageIndex = 0;
+
   utils = new Utils();
 
   static _instance = new GameHandler();
@@ -23,9 +26,33 @@ export class GameHandler {
 
   async startGame() {
     await this.sceneMgr.loadScene();
-    await this.loadMenuScene();
+  }
 
-    this.sceneMgr.switchScene(1);
+  haveLoadedScene() {
+    if (this.sceneMgr.numberSceneLoaded >= 3) return true;
+    else return false;
+  }
+
+  async switchScene(index) {
+    if (index === 1) {
+      !this.playerList && (await this.loadMenuScene());
+      console.log("1", this.sceneMgr.menuScene.children);
+      const player = this.playerList[this.playerIndex];
+      console.log({ player });
+      player.scale.setScalar(4);
+      this.sceneMgr.menuScene.add(player);
+      this.playAnimation(player.name);
+      console.log("2", this.sceneMgr.menuScene.children);
+    }
+    if (index === 2) {
+      this.sceneMgr.mainScene.add(this.playerList[this.playerIndex]);
+      this.standAnimation(this.playerList[this.playerIndex].name);
+      let model = await this.loadStageModel(this.stageList[0].path);
+      let stage = model.scene.children[0];
+      stage.scale.setScalar(4);
+      this.sceneMgr.mainScene.add(stage);
+    }
+    return this.sceneMgr.switchScene(index);
   }
 
   prevCharacter() {
@@ -39,7 +66,6 @@ export class GameHandler {
     let currentPlayer = this.playerList[this.playerIndex];
     currentPlayer.scale.setScalar(4);
     this.sceneMgr.menuScene.add(currentPlayer);
-    this.sceneMgr.switchScene(1);
     this.playDemoAnimation(currentPlayer.name);
   }
 
@@ -54,7 +80,6 @@ export class GameHandler {
     let currentPlayer = this.playerList[this.playerIndex];
     currentPlayer.scale.setScalar(4);
     this.sceneMgr.menuScene.add(currentPlayer);
-    this.sceneMgr.switchScene(1);
     this.playDemoAnimation(currentPlayer.name);
   }
 
@@ -64,10 +89,10 @@ export class GameHandler {
 
     this.playerList = modelList;
 
-    const player = this.playerList[this.playerIndex];
-    player.scale.setScalar(4);
-    this.sceneMgr.menuScene.add(player);
-    this.playAnimation(player.name);
+    // const player = this.playerList[this.playerIndex];
+    // player.scale.setScalar(4);
+    // this.sceneMgr.menuScene.add(player);
+    // this.playAnimation(player.name);
     // modelList.map((model, index) => {
     //   model.scale.setScalar(4);
     //   model.position.setX(positions[index]);
@@ -204,5 +229,13 @@ export class GameHandler {
   stopMoveCamera() {
     this.sceneMgr.isMoveCamera = false;
     this.sceneMgr.setPositionCamera();
+  }
+
+  loadStageModel(path) {
+    return new Promise((resolve, reject) => {
+      this.utils.load3DModelGLTF(path).then((stage) => {
+        resolve(stage);
+      });
+    });
   }
 }
