@@ -82,7 +82,7 @@ export class GameHandler {
     if (this.stageIndex === 0) return;
     this.stageIndex -= 1;
     let currentStage = this.stageList[this.stageIndex];
-    this.ui.showStage(this.currentStage.thumbnail, currentStage.name);
+    this.ui.showStage(currentStage.thumbnail, currentStage.name);
   }
 
   nextStage() {

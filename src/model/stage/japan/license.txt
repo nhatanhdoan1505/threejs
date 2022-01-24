@@ -1,0 +1,11 @@
+Model Information:
+* title:	Nagaya in Nezu
+* source:	https://sketchfab.com/3d-models/nagaya-in-nezu-9da71c4c46c048dc8bad0f29fa1dc74e
+* author:	kazugoru (https://sketchfab.com/kazugoru)
+
+Model License:
+* license type:	CC-BY-NC-SA-4.0 (http://creativecommons.org/licenses/by-nc-sa/4.0/)
+* requirements:	Author must be credited. No commercial use. Modified versions must have the same license.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Nagaya in Nezu" (https://sketchfab.com/3d-models/nagaya-in-nezu-9da71c4c46c048dc8bad0f29fa1dc74e) by kazugoru (https://sketchfab.com/kazugoru) licensed under CC-BY-NC-SA-4.0 (http://creativecommons.org/licenses/by-nc-sa/4.0/)

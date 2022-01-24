@@ -211,14 +211,16 @@ export class Utils {
     return { meshes, clonemeshes, meshList };
   }
 
-  loadSound(url) {
+  loadSound(url, volume = 1) {
     const sound = new Howl({
       src: [url],
       // src: [
       //   "https://redirector.googlevideo.com/videoplayback?expire=1639835560&ei=SJO9YfCtBpua1gKeu5qgDw&ip=207.154.216.138&id=o-AO5H_wbVgDv7mQYDk-Z-PvQMuLQ37C9qNrIPFyuyaisR&itag=22&source=youtube&requiressl=yes&mh=tj&mm=31%2C26&mn=sn-5hnekn7l%2Csn-4g5edn6y&ms=au%2Conr&mv=m&mvi=3&pl=20&initcwndbps=203750&vprv=1&mime=video%2Fmp4&cnr=14&ratebypass=yes&dur=266.402&lmt=1577440663399097&mt=1639813729&fvip=3&fexp=24001373%2C24007246&c=ANDROID&txp=5535432&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRAIgZqL78hsaL_wF0XPPtZMt6F_6wKvhweU73_uYqrX2zGICIGm_GvkcWKgY79LW5Qyi68VMucBbjfNJ7Wb6ZpeLJ8U4&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRQIgVozsAZSRqOPpjmaEuSyKwfhZhQvmmHljp9_Srzmptb8CIQCEu6GtEH2b2h8iYw7td4cTPWScIX27mMgtJKpNifeTsA%3D%3D&host=rr3---sn-5hnekn7l.googlevideo.com&title=yt5s.com-B%C3%80I%20H%C3%81T%20HUY%E1%BB%80N%20THO%E1%BA%A0I%20%7C%20Please%20Tell%20Me%20Why%20-%20B%E1%BA%A3o%20Thy%20X%20V%C6%B0%C6%A1ng%20Khang%20%7C%20LYRIC%20VIDEO",
       // ],
+      volume,
       html5: true,
     });
+    console.log(sound);
     return sound;
   }
 }

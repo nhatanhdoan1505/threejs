@@ -37,6 +37,8 @@ export class GameController {
   difficult = 0;
   maxChallenge = 2;
 
+  soundEffect;
+
   constructor() {
     this.utils = new Utils();
     this.ui = new UI();
@@ -162,6 +164,7 @@ export class GameController {
           this.timeUp = true;
           this.playAnswer = [];
           if (!this.pressSpace) {
+            this.combo = 0;
             this.player.standAnimation();
             this.ui.showResult(this.status);
           }
@@ -191,6 +194,7 @@ export class GameController {
       this.playAnswer = [];
       this.ui.showResult(this.status);
       this.combo = 0;
+      this.playSoundEffect(true);
       return this.player.standAnimation();
     }
 
@@ -205,6 +209,7 @@ export class GameController {
       this.playAnswer = [];
       this.ui.showResult(this.status);
       this.combo = 0;
+      this.playSoundEffect(true);
       return this.player.standAnimation();
     }
     this.status = false;
@@ -235,6 +240,7 @@ export class GameController {
 
     this.ui.showResult(this.status, this.combo);
     // this.combo > 2 && this.gameHandler.moveCamera();
+    this.playSoundEffect();
     return this.player.playAnimation();
   }
 
@@ -316,6 +322,14 @@ export class GameController {
     this.musicList.push({ id, link });
     this.currentMusic = id;
     this.isClickGetLink = false;
+  }
+
+  playSoundEffect(miss = false) {
+    let url = !miss
+      ? GameSystem.sound.effect.space
+      : GameSystem.sound.effect.miss;
+    this.soundEffect = this.utils.loadSound(url, 0.3);
+    this.soundEffect.play();
   }
 }
 

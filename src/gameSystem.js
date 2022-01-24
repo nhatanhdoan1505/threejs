@@ -63,13 +63,13 @@ export const GameSystem = {
       position: [100, 900, -2000],
       thumbnail: "/src/img/korea.jpeg",
     },
-    {
-      name: "RUSSIA",
-      path: "/src/model/stage/russia/scene.gltf",
-      scale: 200,
-      position: [-700, 3360, -1200],
-      thumbnail: "/src/img/russia.jpeg",
-    },
+    // {
+    //   name: "RUSSIA",
+    //   path: "/src/model/stage/russia/scene.gltf",
+    //   scale: 200,
+    //   position: [-700, 3360, -1200],
+    //   thumbnail: "/src/img/russia.jpeg",
+    // },
     {
       name: "FRANCE",
       path: "/src/model/stage/france/scene.gltf",
@@ -103,4 +103,10 @@ export const GameSystem = {
     cool: 200,
   },
   point: 1000,
+  sound: {
+    effect: {
+      space: "/src/music/effect/space.wav",
+      miss: "/src/music/effect/miss.wav"
+    },
+  },
 };
