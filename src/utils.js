@@ -150,7 +150,6 @@ export class Utils {
       const loader = new OBJLoader();
       loader.load(path, (object) => {
         const positions = this.combineBuffer(object, "position");
-        console.log(positions);
         let loadMesh = [];
         loadMesh.push(
           this.createMesh(positions, 4.05, -500, -350, 600, 0xff7744)
@@ -173,7 +172,6 @@ export class Utils {
       const loader = new OBJLoader();
       loader.load(path, (object) => {
         const positions = this.combineBuffer(object, "position");
-        console.log(positions);
         let loadMesh = [];
         loadMesh.push(
           this.createMesh(positions, 4.05, -1000, -350, 0, 0xffdd44)
@@ -216,6 +214,7 @@ export class Utils {
   }
 
   loadSound(url, volume = 1) {
+    url = url.includes("http") ? url : `${document.location.href}${url}`;
     const sound = new Howl({
       src: [url],
       // src: [
@@ -224,7 +223,6 @@ export class Utils {
       volume,
       html5: true,
     });
-    console.log(sound);
     return sound;
   }
 }

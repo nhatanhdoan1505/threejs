@@ -177,8 +177,10 @@ export class UI {
   }
 
   showStage(thumbnail, name) {
-    console.log(thumbnail);
-    console.log(this.thumbStage);
+    thumbnail =
+      document.location.href === "http://127.0.0.1:5500/index.html"
+        ? thumbnail
+        : `${document.location.href}${path}`;
     this.thumbStage.src = thumbnail;
     this.nameStage.innerHTML = name;
   }

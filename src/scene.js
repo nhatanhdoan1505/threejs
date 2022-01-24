@@ -122,7 +122,6 @@ export class Scene {
               this.xPositionMain = this.camera.position.x;
               this.camera.position.setY(2200);
               this.camera.position.setX(50);
-              console.log(this.camera.position);
               this.render();
               resolve(true);
             }
