@@ -7,8 +7,12 @@ export class Utils {
   async load3DModel(path) {
     return new Promise(function (resolve, reject) {
       const loaders = new FBXLoader();
+      let file =
+        document.location.href === "http://127.0.0.1:5500/index.html"
+          ? path
+          : `${document.location.href}${path}`;
       loaders.load(
-        path,
+        file,
         (object) => {
           resolve(object);
         },
@@ -27,8 +31,12 @@ export class Utils {
   async load3DModelGLTF(path) {
     return new Promise(function (resolve, reject) {
       const loaders = new GLTFLoader();
+      let file =
+        document.location.href === "http://127.0.0.1:5500/index.html"
+          ? path
+          : `${document.location.href}${path}`;
       loaders.load(
-        path,
+        file,
         (object) => {
           resolve(object);
         },
