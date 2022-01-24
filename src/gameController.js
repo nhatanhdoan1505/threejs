@@ -328,7 +328,7 @@ export class GameController {
     let url = !miss
       ? GameSystem.sound.effect.space
       : GameSystem.sound.effect.miss;
-    this.soundEffect = this.utils.loadSound(url, 0.3);
+    this.soundEffect = this.utils.loadSound(url, 0.7);
     this.soundEffect.play();
   }
 }
