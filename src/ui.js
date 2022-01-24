@@ -180,7 +180,7 @@ export class UI {
     thumbnail =
       document.location.href === "http://127.0.0.1:5500/index.html"
         ? thumbnail
-        : `${document.location.href}${path}`;
+        : `${document.location.href}${thumbnail}`;
     this.thumbStage.src = thumbnail;
     this.nameStage.innerHTML = name;
   }

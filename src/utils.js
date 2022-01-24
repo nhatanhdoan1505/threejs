@@ -214,7 +214,11 @@ export class Utils {
   }
 
   loadSound(url, volume = 1) {
-    url = url.includes("http") ? url : `${document.location.href}${url}`;
+    url = url.includes("http")
+      ? url
+      : document.location.href.includes("http://127.0.0.1:5500/index.html")
+      ? url
+      : `${document.location.href}${url}`;
     const sound = new Howl({
       src: [url],
       // src: [

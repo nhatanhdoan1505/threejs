@@ -327,10 +327,10 @@ export class Scene {
     this.composer &&
       this.composer.setSize(window.innerWidth, window.innerHeight);
 
-    this.effectFocus.uniforms["screenWidth"].value =
-      window.innerWidth * window.devicePixelRatio;
-    this.effectFocus.uniforms["screenHeight"].value =
-      window.innerHeight * window.devicePixelRatio;
+    // this.effectFocus && this.effectFocus.uniforms["screenWidth"].value =
+    //   window.innerWidth * window.devicePixelRatio;
+    // this.effectFocus && this.effectFocus.uniforms["screenHeight"].value =
+    //   window.innerHeight * window.devicePixelRatio;
   }
 
   moveCamera() {
