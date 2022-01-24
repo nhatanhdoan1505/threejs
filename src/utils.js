@@ -16,11 +16,7 @@ export class Utils {
         (object) => {
           resolve(object);
         },
-        (xhr) => {
-          console.log(
-            "The car model is " + (xhr.loaded / xhr.total) * 100 + "% loaded"
-          );
-        },
+        (xhr) => {},
         (err) => {
           console.log("An error happened in loading car model: " + err);
         }
