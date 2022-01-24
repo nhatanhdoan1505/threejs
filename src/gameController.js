@@ -8,7 +8,7 @@ export class GameController {
   gameControlChallenge = null;
   keyCode = [37, 38, 39, 40];
   challenge = [];
-  playAnwser = [];
+  playAnswer = [];
   timeUp = true;
   status = 0;
   pressSpace = false;
@@ -23,7 +23,7 @@ export class GameController {
   music;
 
   musicList = [];
-  curentMusic;
+  currentMusic;
 
   isClickGetLink = false;
 
@@ -45,28 +45,25 @@ export class GameController {
   }
 
   firstScene() {
-    this.waitingFirstScene = setInterval(() => {
-      if (this.gameHandler.haveLoadedScene) {
-        this.sceneWelcome();
-        clearInterval(this.waitingFirstScene);
-      }
-    }, 1000);
+    this.sceneMenu();
   }
 
   sceneWelcome() {
-    this.ui.refeshUI();
+    this.ui.refreshUI();
     this.ui.inputNameControl();
     this.gameHandler.switchScene(0);
   }
 
   sceneMenu() {
-    this.ui.refeshUI();
-    this.ui.chooseCharacterControl();
-    this.ui.musicSideBarControl();
-    this.gameHandler.switchScene(1);
+    this.ui.refreshUI();
+    this.gameHandler.switchScene(1).then((_) => {
+      this.ui.chooseCharacterControl();
+      this.ui.musicSideBarControl();
+      this.ui.chooseStageControl();
+    });
   }
 
-  ranndomTurnChallenge(min, max) {
+  randomTurnChallenge(min, max) {
     let challenge = new Array(this.utils.randomNumber(min, max)).fill(0);
     challenge = challenge.map((c) => this.utils.randomDirection(this.keyCode));
 
@@ -77,45 +74,57 @@ export class GameController {
     if (this.start) {
       return;
     }
-    let name = this.gameHandler.playerList[this.gameHandler.playerIndex].name;
-    this.gameHandler.switchScene(2);
-    // this.start = true;
-    this.player = !this.player ? new Player(name) : this.player;
+    this.ui.refreshUI();
+    this.refreshNewGame();
+
     if (this.sound) this.sound.stop();
-    this.ui.gameOverControl(this.point);
-    this.sound = !this.sound
-      ? this.utils.loadSound(this.music ? this.music : "/src/music/start.mp3")
-      : this.sound;
-    this.sound.play();
-    this.ui.refeshUI();
-    this.startGamePlay();
-    this.sound.on("end", () => {
-      this.stopGame();
+    this.gameHandler.switchScene(2).then((_) => {
+      this.start = true;
+      let name = this.gameHandler.playerList[this.gameHandler.playerIndex].name;
+      this.player = new Player(name);
+      setTimeout(() => {
+        this.sound = !this.sound
+          ? this.utils.loadSound(
+              this.music ? this.music : "/src/music/start.mp3"
+            )
+          : this.sound;
+        this.sound.play();
+        this.gameHandler.moveCamera();
+        this.startGamePlay();
+        this.sound.on("end", () => {
+          this.stopGame();
+        });
+      }, 5000);
     });
   }
 
-  async restartGame() {
+  refreshNewGame() {
     this.challenge = [];
-    this.playAnwser = [];
+    this.playAnswer = [];
     this.timeUp = true;
     this.status = 0;
     this.pressSpace = false;
     this.combo = 0;
     this.point = 0;
+    this.difficult = 0;
+    this.maxChallenge = 2;
+  }
+
+  async restartGame() {
     this.player.standAnimation();
+    this.refreshNewGame();
     if (this.sound) this.sound.stop();
     this.sound.play();
-    this.ui.refeshUI();
+    this.ui.refreshUI();
     this.ui.gameOverControl(0, true);
     this.startGamePlay();
-    this.ui.gameOverControl();
     this.sound.on("end", () => {
       this.stopGame();
     });
   }
 
   backToRoom() {
-    this.ui.stopGame();
+    this.ui.gameOverControl(0, true);
     this.sceneMenu();
   }
 
@@ -123,7 +132,7 @@ export class GameController {
     this.pressSpace = false;
     this.timeUp = false;
     this.status = 0;
-    this.playAnwser = [];
+    this.playAnswer = [];
     clearInterval(this.gameControlChallenge);
     this.ui.stopGame();
     setTimeout(() => {
@@ -134,28 +143,30 @@ export class GameController {
 
   startGamePlay() {
     this.ui.playGame();
-    this.gameControlChallenge = setInterval(() => {
-      this.clock = Date.now();
-      this.pressSpace = false;
-      this.timeUp = false;
-      this.status = 0;
-      this.difficult += 0.3;
-      let max =
-        Math.floor(this.difficult) + this.maxChallenge > 8
-          ? 8
-          : Math.floor(this.difficult) + this.maxChallenge;
-      let min = max > 5 ? 3 : 1;
-      this.challenge = this.ranndomTurnChallenge(min, max);
-      this.ui.showChallenge(this.challenge);
-      this.listenKeyBoard();
-      setTimeout(() => {
-        this.timeUp = true;
-        this.playAnwser = [];
-        if (!this.pressSpace) {
-          this.player.standAnimation();
-          this.ui.showResult(this.status);
-        }
-      }, 3000);
+    setTimeout(() => {
+      this.gameControlChallenge = setInterval(() => {
+        this.clock = Date.now();
+        this.pressSpace = false;
+        this.timeUp = false;
+        this.status = 0;
+        this.difficult += 0.3;
+        let max =
+          Math.floor(this.difficult) + this.maxChallenge > 8
+            ? 8
+            : Math.floor(this.difficult) + this.maxChallenge;
+        let min = max > 5 ? 3 : 1;
+        this.challenge = this.randomTurnChallenge(min, max);
+        this.ui.showChallenge(this.challenge);
+        this.listenKeyBoard();
+        setTimeout(() => {
+          this.timeUp = true;
+          this.playAnswer = [];
+          if (!this.pressSpace) {
+            this.player.standAnimation();
+            this.ui.showResult(this.status);
+          }
+        }, 3000);
+      }, 5000);
     }, 5000);
   }
 
@@ -165,33 +176,33 @@ export class GameController {
   // }
 
   checkMiss() {
-    if (this.playAnwser.length > this.challenge.length) {
-      this.playAnwser = this.playAnwser.slice(0, this.playAnwser.length - 1);
+    if (this.playAnswer.length > this.challenge.length) {
+      this.playAnswer = this.playAnswer.slice(0, this.playAnswer.length - 1);
       return;
     }
     if (
-      this.challenge[this.playAnwser.length - 1] !==
-      this.playAnwser[this.playAnwser.length - 1]
+      this.challenge[this.playAnswer.length - 1] !==
+      this.playAnswer[this.playAnswer.length - 1]
     ) {
       this.status = 0;
       this.timeUp = true;
 
-      this.ui.showChallengeColor(this.playAnwser.length - 1, 0);
-      this.playAnwser = [];
+      this.ui.showChallengeColor(this.playAnswer.length - 1, 0);
+      this.playAnswer = [];
       this.ui.showResult(this.status);
       this.combo = 0;
       return this.player.standAnimation();
     }
 
-    return this.ui.showChallengeColor(this.playAnwser.length - 1, 1);
+    return this.ui.showChallengeColor(this.playAnswer.length - 1, 1);
   }
 
   checkPerfect() {
     this.pressSpace = true;
-    if (this.playAnwser.length !== this.challenge.length) {
+    if (this.playAnswer.length !== this.challenge.length) {
       this.status = 0;
-      this.ui.miss(this.playAnwser.length - 1);
-      this.playAnwser = [];
+      this.ui.miss(this.playAnswer.length - 1);
+      this.playAnswer = [];
       this.ui.showResult(this.status);
       this.combo = 0;
       return this.player.standAnimation();
@@ -234,7 +245,7 @@ export class GameController {
         if (e.keyCode === 32) {
           self.checkPerfect();
         } else {
-          self.playAnwser.push(e.keyCode);
+          self.playAnswer.push(e.keyCode);
           self.checkMiss();
         }
       }
@@ -247,6 +258,14 @@ export class GameController {
       min += 1;
       this.ui.showPoint(min);
     }, 10);
+  }
+
+  preStage() {
+    return this.gameHandler.preStage();
+  }
+
+  nextStage() {
+    return this.gameHandler.nextStage();
   }
 
   prevCharacter() {
@@ -266,8 +285,8 @@ export class GameController {
 
   async onClickMusic(id) {
     if (this.isClickGetLink) return;
-    if (this.curentMusic === id) return;
-    if (this.curentMusic) this.ui.removeEqualizerAnimation(this.curentMusic);
+    if (this.currentMusic === id) return;
+    if (this.currentMusic) this.ui.removeEqualizerAnimation(this.currentMusic);
     if (this.musicList.some((m) => m.id === id)) {
       if (this.sound) this.sound.stop();
       let link = this.musicList.find((m) => m.id === id).link;
@@ -295,7 +314,7 @@ export class GameController {
     this.sound.play();
     this.ui.equalizerAnimation(id);
     this.musicList.push({ id, link });
-    this.curentMusic = id;
+    this.currentMusic = id;
     this.isClickGetLink = false;
   }
 }

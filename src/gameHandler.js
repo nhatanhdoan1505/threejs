@@ -3,6 +3,7 @@ import * as THREE from "./lib/three.js/build/three.module.js";
 import { FBXLoader } from "./lib/three.js/examples/jsm/loaders/FBXLoader.js";
 import { Scene } from "./scene.js";
 import { Utils } from "./utils.js";
+import { UI } from "./ui.js";
 
 export class GameHandler {
   sceneMgr = new Scene();
@@ -11,13 +12,15 @@ export class GameHandler {
   stageList = GameSystem.stage;
   stageIndex = 0;
 
+  ui = new UI();
+
   utils = new Utils();
 
   static _instance = new GameHandler();
 
   constructor() {
     GameHandler._instance = this;
-    this.startGame();
+    // this.startGame();
   }
 
   static getInstance() {
@@ -33,39 +36,74 @@ export class GameHandler {
     else return false;
   }
 
-  async switchScene(index) {
-    if (index === 1) {
-      !this.playerList && (await this.loadMenuScene());
-      console.log("1", this.sceneMgr.menuScene.children);
-      const player = this.playerList[this.playerIndex];
-      console.log({ player });
-      player.scale.setScalar(4);
-      this.sceneMgr.menuScene.add(player);
-      this.playAnimation(player.name);
-      console.log("2", this.sceneMgr.menuScene.children);
-    }
-    if (index === 2) {
-      this.sceneMgr.mainScene.add(this.playerList[this.playerIndex]);
-      this.standAnimation(this.playerList[this.playerIndex].name);
-      let model = await this.loadStageModel(this.stageList[0].path);
-      let stage = model.scene.children[0];
-      stage.scale.setScalar(4);
-      this.sceneMgr.mainScene.add(stage);
-    }
-    return this.sceneMgr.switchScene(index);
+  switchScene(index) {
+    return new Promise(async (resolve, reject) => {
+      const objectList = [];
+      if (index === 1) {
+        !this.playerList && (await this.loadMenuScene());
+        const player = this.playerList[this.playerIndex];
+        player.scale.setScalar(4);
+        objectList.push(player);
+        this.ui.showCharacterName(player.name);
+        this.ui.showStage(
+          this.stageList[this.stageIndex].thumbnail,
+          this.stageList[this.stageIndex].name
+        );
+        this.playAnimation(player.name);
+      }
+      if (index === 2) {
+        const stageInformation = this.stageList[this.stageIndex];
+        let model = await this.loadStageModel(
+          this.stageList[this.stageIndex].path
+        );
+        let stage = model.scene.children[0];
+        stage.scale.setScalar(stageInformation.scale);
+        if (stageInformation.rotation) {
+          stage.rotation.x = stageInformation.rotation[0];
+          stage.rotation.y = stageInformation.rotation[1];
+          stage.rotation.z = stageInformation.rotation[2];
+        }
+        stage.position.set(
+          stageInformation.position[0],
+          stageInformation.position[1],
+          stageInformation.position[2]
+        );
+        objectList.push(this.playerList[this.playerIndex]);
+        objectList.push(stage);
+        this.standAnimation(this.playerList[this.playerIndex].name);
+      }
+      this.sceneMgr.switchScene(index, objectList).then((_) => {
+        resolve(true);
+      });
+    });
+  }
+
+  preStage() {
+    if (this.stageIndex === 0) return;
+    this.stageIndex -= 1;
+    let currentStage = this.stageList[this.stageIndex];
+    this.ui.showStage(this.currentStage.thumbnail, currentStage.name);
+  }
+
+  nextStage() {
+    if (this.stageIndex === this.stageList.length - 1) return;
+    this.stageIndex += 1;
+    let currentStage = this.stageList[this.stageIndex];
+    this.ui.showStage(currentStage.thumbnail, currentStage.name);
   }
 
   prevCharacter() {
     if (this.playerIndex === 0) return;
 
     const playerName = this.playerList[this.playerIndex].name;
-    let player = this.sceneMgr.menuScene.getObjectByName(playerName);
-    this.sceneMgr.menuScene.remove(player);
+    let player = this.sceneMgr.scene.getObjectByName(playerName);
+    this.sceneMgr.scene.remove(player);
 
     this.playerIndex -= 1;
     let currentPlayer = this.playerList[this.playerIndex];
     currentPlayer.scale.setScalar(4);
-    this.sceneMgr.menuScene.add(currentPlayer);
+    this.sceneMgr.scene.add(currentPlayer);
+    this.ui.showCharacterName(currentPlayer.name);
     this.playDemoAnimation(currentPlayer.name);
   }
 
@@ -73,13 +111,14 @@ export class GameHandler {
     if (this.playerIndex === this.playerList.length - 1) return;
 
     const playerName = this.playerList[this.playerIndex].name;
-    let player = this.sceneMgr.menuScene.getObjectByName(playerName);
-    this.sceneMgr.menuScene.remove(player);
+    let player = this.sceneMgr.scene.getObjectByName(playerName);
+    this.sceneMgr.scene.remove(player);
 
     this.playerIndex += 1;
     let currentPlayer = this.playerList[this.playerIndex];
     currentPlayer.scale.setScalar(4);
-    this.sceneMgr.menuScene.add(currentPlayer);
+    this.sceneMgr.scene.add(currentPlayer);
+    this.ui.showCharacterName(currentPlayer.name);
     this.playDemoAnimation(currentPlayer.name);
   }
 
@@ -88,17 +127,6 @@ export class GameHandler {
     const modelList = await this.loadModel(characterList);
 
     this.playerList = modelList;
-
-    // const player = this.playerList[this.playerIndex];
-    // player.scale.setScalar(4);
-    // this.sceneMgr.menuScene.add(player);
-    // this.playAnimation(player.name);
-    // modelList.map((model, index) => {
-    //   model.scale.setScalar(4);
-    //   model.position.setX(positions[index]);
-    //   console.log("add");
-    //   this.sceneMgr.menuScene.add(model);
-    // });
   }
 
   handlerModel(data) {
@@ -143,10 +171,6 @@ export class GameHandler {
     });
 
     const modelHandler = await Promise.all(modelHandlerPromiseList);
-    // modelHandler.map((model, index) => {
-    //   model.position.setX(positions[index]);
-    //   this.sceneMgr.mainScene.add(model);
-    // });
     return modelHandler;
   }
 
@@ -168,7 +192,6 @@ export class GameHandler {
     return new Promise((resolve, reject) => {
       this.sceneMgr.objects[index].mixer.stopAllAction();
       const { animations } = this.sceneMgr.objects[index];
-      console.log(animations);
       this.sceneMgr.objects[index].idle = this.sceneMgr.objects[
         index
       ].mixer.clipAction(
@@ -220,10 +243,7 @@ export class GameHandler {
   }
 
   moveCamera() {
-    let randomDirection = Math.floor(Math.random() * 2);
-    this.sceneMgr.moveDirection = randomDirection === 0 ? -1 : 1;
     this.sceneMgr.isMoveCamera = true;
-    setTimeout(() => this.stopMoveCamera(), 4000);
   }
 
   stopMoveCamera() {

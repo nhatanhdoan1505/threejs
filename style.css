@@ -7,29 +7,32 @@ body {
 
 .challenge {
   position: absolute;
-  top: 80%;
+  top: 90%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
-
+  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
   padding: 10px;
 }
 
 .play {
-  border: 1px solid white;
+  /* border: 1px solid #325288; */
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
 .challenge > span {
   font-size: 2rem;
   width: 50px;
   height: 50px;
-  border: 1px solid white;
+  /* border: 1px solid #325288; */
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
   margin: 10px;
-  color: white;
+  color: #325288;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 button {
@@ -37,12 +40,20 @@ button {
 }
 
 .pass {
-  background-color: #97bfb4;
+  background: linear-gradient(to left, #56ab2f, #a8e063);
   color: white;
 }
 
-.miss {
-  background-color: #dd4a48;
+.pass > i {
+  color: white;
+}
+
+._miss {
+  background: linear-gradient(to left, #eb3349, #f45c43);
+  color: white;
+}
+
+._miss > i {
   color: white;
 }
 
@@ -80,7 +91,7 @@ button {
   width: 200px;
   height: 20px;
   position: absolute;
-  top: 70%;
+  top: 80%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 100;
@@ -89,7 +100,7 @@ button {
 }
 
 .target {
-  width: 4px;
+  width: 8px;
   height: 20px;
   background: linear-gradient(to left, #c33764, #1d2671);
   position: absolute;
@@ -118,7 +129,7 @@ button {
 } */
 
 .movementBall {
-  color: white;
+  color: #325288;
   position: absolute;
   top: 15%;
   left: -5%;
@@ -132,11 +143,11 @@ button {
 
 @keyframes displaceContent {
   from {
-    transform: translateX(-1em);
+    transform: translateX(-0.5em);
   }
 
   to {
-    transform: translateX(14em);
+    transform: translateX(13em);
   }
 }
 
@@ -298,6 +309,37 @@ button {
   cursor: pointer;
 }
 
+.choose-stage {
+  position: absolute;
+  top: 61%;
+  left: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  visibility: hidden;
+}
+
+.prev-next-stage {
+  color: black;
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prev-next-stage > i:hover {
+  cursor: pointer;
+}
+
+.prev-next-stage > img {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 8px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
 .choose-character {
   position: absolute;
   top: 60%;
@@ -314,9 +356,11 @@ button {
   padding: 5px;
   width: 50px;
   border: 1px solid white;
-  color: white;
+  color: black;
   margin-top: 20px;
   cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 }
 
 .next-btn:hover {
@@ -324,12 +368,16 @@ button {
   color: black;
 }
 
-.prev-next {
-  color: white;
+.prev-next-character {
+  color: black;
   width: 300px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.prev-next-character > i:hover {
+  cursor: pointer;
 }
 
 .prev-next > i {
@@ -342,16 +390,28 @@ button {
   width: 25%;
   max-width: 300px;
   height: 90%;
-  color: white;
+  color: black;
   visibility: hidden;
 }
 
 .music-sidebar > input {
   background-color: transparent;
-  border: 1px solid white;
+  border: none;
+  /* border-bottom: 1px solid black; */
   width: 100%;
   margin-left: 5px;
-  color: white;
+  color: black;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  padding: 5px 5px;
+}
+
+.music-sidebar > input:focus {
+  transition: all 0.5;
+  outline: none;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-image: linear-gradient(to right, #cc2b5e, #753a88);
+  border-image-slice: 1;
 }
 
 .video-container {
@@ -366,6 +426,11 @@ button {
   display: flex;
   margin-left: 20px;
   margin-top: 10px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  padding: 5px;
+  max-width: 260px;
+  max-height: 130px;
 }
 
 .video > img {

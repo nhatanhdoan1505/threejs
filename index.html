@@ -37,14 +37,25 @@
     </div>
 
     <div class="choose-character" id="choose-character">
-        <div class="prev-next">
+        <div class="prev-next-character">
             <i class="fa fa-chevron-left" aria-hidden="true" onClick="game.prevCharacter()"></i>
+            <h6 id="character-name"></h6>
             <i class="fa fa-chevron-right" aria-hidden="true" onClick="game.nextCharacter()"></i>
         </div>
         <div class="next-btn" onClick="game.gameStart()"><strong>Play</strong></div>
     </div>
+
+    <div class="choose-stage" id="choose-stage">
+        <div class="prev-next-stage">
+            <i class="fa fa-chevron-left" aria-hidden="true" onClick="game.preStage()"></i>
+            <img src="" id="thumbnail-stage" alt="" />
+            <i class="fa fa-chevron-right" aria-hidden="true" onClick="game.nextStage()"></i>
+        </div>
+        <h6 id="name-stage">TOKYO</h6>
+    </div>
+
     <div class="music-sidebar" id="music-sidebar">
-        <input type="text" placeholder="Enter a song" oninput="game.onChangeMusicSideBar()" id="musicInput" />
+        <input type="text" placeholder="Enter a online song" oninput="game.onChangeMusicSideBar()" id="musicInput" />
         <div class="video-container" id="video-container">
         </div>
     </div>

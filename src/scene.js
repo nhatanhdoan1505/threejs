@@ -35,10 +35,6 @@ export class Scene {
   isMoveCamera = false;
   moveDirection = 1;
 
-  welcomeScene = new THREE.Scene();
-  menuScene = new THREE.Scene();
-  mainScene = new THREE.Scene();
-
   sceneNumber;
 
   utils = new Utils();
@@ -47,76 +43,95 @@ export class Scene {
 
   waitingSwitchScene;
 
+  circle;
+  skelet;
+  particle;
+
+  light1;
+  light2;
+  light3;
+  light4;
+  plane;
+
+  yPositionMain;
+  xPositionMain;
+
   constructor() {
     this.createScene();
     this.createRenderer();
   }
 
-  async loadScene() {
-    await this.loadWelcomeScene();
-    await this.loadMainScene();
-    await this.loadMenuScene();
-  }
-
-  switchScene(numberScene) {
-    switch (numberScene) {
-      case 0:
-        this.clearScene();
-        this.waitingSwitchScene = setInterval(() => {
-          if (this.scene.children.length === 0) {
-            this.scene.background = new THREE.Color(0x000104);
-            this.scene.fog = new THREE.FogExp2(0x000104, 0.0000675);
-            this.camera = new THREE.PerspectiveCamera(
-              20,
-              window.innerWidth / window.innerHeight,
-              1,
-              50000
-            );
-            this.camera.position.set(0, 700, 7000);
-            this.camera.lookAt(this.scene.position);
-            this.renderModel = new RenderPass(this.scene, this.camera);
-            this.composer.addPass(this.renderModel);
-            this.scene = this.welcomeScene;
-            this.sceneNumber = 0;
-            this.render();
-            clearInterval(this.waitingSwitchScene);
-          }
-        }, 1000);
-        break;
-      case 1:
-        this.clearScene();
-        this.waitingSwitchScene = setInterval(() => {
-          if (this.scene.children.length === 0) {
-            this.scene = this.menuScene;
-            this.camera = new THREE.PerspectiveCamera(
-              20,
-              window.innerWidth / window.innerHeight,
-              1,
-              50000
-            );
-            this.camera.position.set(0, 700, 7000);
-            this.camera.lookAt(this.scene.position);
-            this.sceneNumber = 1;
-            this.render();
-            clearInterval(this.waitingSwitchScene);
-          }
-        }, 1000);
-        break;
-      case 2:
-        this.clearScene();
-        this.waitingSwitchScene = setInterval(() => {
-          if (this.scene.children.length === 0) {
-            this.scene.background = new THREE.Color(0xa0a0a0);
-            this.scene.fog = new THREE.Fog(0xa0a0a0, 200, 1000);
-            this.scene = this.mainScene;
-            this.render();
-            clearInterval(this.waitingSwitchScene);
-          }
-        }, 1000);
-        break;
-      default:
-        break;
-    }
+  switchScene(numberScene, objectList) {
+    return new Promise((resolve, reject) => {
+      this.clearScene();
+      switch (numberScene) {
+        case 0:
+          this.waitingSwitchScene = setInterval(() => {
+            if (this.scene.children.length === 0) {
+              clearInterval(this.waitingSwitchScene);
+              this.loadWelcomeScene().then(() => {
+                this.scene.background = new THREE.Color(0x000104);
+                this.scene.fog = new THREE.FogExp2(0x000104, 0.0000675);
+                this.camera = new THREE.PerspectiveCamera(
+                  20,
+                  window.innerWidth / window.innerHeight,
+                  1,
+                  50000
+                );
+                this.camera.position.set(0, 700, 7000);
+                this.camera.lookAt(this.scene.position);
+                this.renderModel = new RenderPass(this.scene, this.camera);
+                this.composer.addPass(this.renderModel);
+                this.sceneNumber = 0;
+                this.render();
+                resolve(true);
+              });
+            }
+          }, 1000);
+          break;
+        case 1:
+          this.waitingSwitchScene = setInterval(() => {
+            if (this.scene.children.length === 0) {
+              clearInterval(this.waitingSwitchScene);
+              this.loadMenuScene().then(() => {
+                this.scene.background = new THREE.Color("#EEEEEE");
+                this.camera = new THREE.PerspectiveCamera(
+                  20,
+                  window.innerWidth / window.innerHeight,
+                  1,
+                  50000
+                );
+                this.camera.position.set(0, 700, 7000);
+                this.camera.lookAt(this.scene.position);
+                this.sceneNumber = 1;
+                objectList.forEach((ob) => this.scene.add(ob));
+                this.render();
+                resolve(true);
+              });
+            }
+          }, 1000);
+          break;
+        case 2:
+          this.waitingSwitchScene = setInterval(() => {
+            if (this.scene.children.length === 0) {
+              clearInterval(this.waitingSwitchScene);
+              this.createLight();
+              // this.createOrbitControl();
+              objectList.forEach((ob) => this.scene.add(ob));
+              this.yPositionMain = 1000;
+              this.xPositionMain = this.camera.position.x;
+              this.camera.position.setY(2200);
+              this.camera.position.setX(50);
+              console.log(this.camera.position);
+              this.render();
+              resolve(true);
+            }
+          }, 1000);
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   clearScene() {
@@ -125,15 +140,13 @@ export class Scene {
     }
   }
 
-  loadMainScene() {
-    return new Promise((resolve, reject) => {
-      this.createLight();
-      // this.createGround();
-      console.log("load main");
-      this.numberSceneLoaded += 1;
-      resolve(true);
-    });
-  }
+  // loadMainScene() {
+  //   return new Promise((resolve, reject) => {
+  //     // this.createGround();
+  //     this.numberSceneLoaded += 1;
+  //     resolve(true);
+  //   });
+  // }
 
   loadWelcomeScene() {
     return new Promise(async (resolve, reject) => {
@@ -168,29 +181,84 @@ export class Scene {
       this.composer.addPass(effectFilm);
       this.composer.addPass(this.effectFocus);
 
-      this.welcomeScene.add(this.parent);
-
-      this.numberSceneLoaded += 1;
+      this.scene.add(this.parent);
       resolve(true);
     });
   }
 
   loadMenuScene() {
-    const dirLight = new THREE.DirectionalLight(0xffffff);
-    dirLight.position.set(0, 200, 100);
-    dirLight.castShadow = true;
-    dirLight.shadow.camera.top = 180;
-    dirLight.shadow.camera.bottom = -100;
-    dirLight.shadow.camera.left = -120;
-    dirLight.shadow.camera.right = 120;
+    return new Promise((resolve, reject) => {
+      this.circle = new THREE.Object3D();
+      this.skelet = new THREE.Object3D();
+      this.particle = new THREE.Object3D();
 
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
-    hemiLight.position.set(0, 200, 0);
+      this.scene.add(this.circle);
+      this.scene.add(this.skelet);
+      this.scene.add(this.particle);
 
-    this.menuScene.add(dirLight);
-    this.menuScene.add(hemiLight);
+      let geometry = new THREE.TetrahedronGeometry(2, 0);
+      let geom = new THREE.IcosahedronGeometry(7, 1);
+      let geom2 = new THREE.IcosahedronGeometry(15, 1);
 
-    this.numberSceneLoaded += 1;
+      let material = new THREE.MeshPhongMaterial({
+        color: "#F94892",
+        shading: THREE.FlatShading,
+      });
+
+      for (let i = 0; i < 1000; i++) {
+        let mesh = new THREE.Mesh(geometry, material);
+        mesh.position
+          .set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5)
+          .normalize();
+        mesh.position.multiplyScalar(90 + Math.random() * 700);
+        mesh.rotation.set(
+          Math.random() * 2,
+          Math.random() * 2,
+          Math.random() * 2
+        );
+        mesh.scale.set(2, 2, 2);
+        this.particle.add(mesh);
+      }
+
+      let mat = new THREE.MeshPhongMaterial({
+        color: "#F94892",
+        shading: THREE.FlatShading,
+      });
+
+      let mat2 = new THREE.MeshPhongMaterial({
+        color: "#E60965",
+        wireframe: true,
+        side: THREE.DoubleSide,
+      });
+
+      let planet = new THREE.Mesh(geom, mat);
+      planet.scale.x = planet.scale.y = planet.scale.z = 16;
+      planet.position.set(0, -600, 0);
+      this.circle.add(planet);
+
+      let planet2 = new THREE.Mesh(geom2, mat2);
+      planet2.scale.x = planet2.scale.y = planet2.scale.z = 10;
+      planet2.position.set(0, -600, 0);
+      this.skelet.add(planet2);
+
+      this.createLight();
+
+      let ambientLight = new THREE.AmbientLight(0x999999);
+      this.scene.add(ambientLight);
+      let lights = [];
+      lights[0] = new THREE.DirectionalLight(0xffffff, 1);
+      lights[0].position.set(1, 0, 0);
+      lights[1] = new THREE.DirectionalLight(0x11e8bb, 1);
+      lights[1].position.set(0.75, 1, 0.5);
+      lights[2] = new THREE.DirectionalLight(0x8200c9, 1);
+      lights[2].position.set(-0.75, -1, 0.5);
+      this.scene.add(lights[0]);
+      this.scene.add(lights[1]);
+      this.scene.add(lights[2]);
+
+      this.numberSceneLoaded += 1;
+      resolve(true);
+    });
   }
 
   createOrbitControl() {
@@ -210,7 +278,7 @@ export class Scene {
   }
 
   createRenderer() {
-    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.shadowMap.enabled = true;
@@ -222,6 +290,8 @@ export class Scene {
   }
 
   createLight() {
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
+    hemiLight.position.set(0, 200, 0);
     const dirLight = new THREE.DirectionalLight(0xffffff);
     dirLight.position.set(0, 200, 100);
     dirLight.castShadow = true;
@@ -230,11 +300,8 @@ export class Scene {
     dirLight.shadow.camera.left = -120;
     dirLight.shadow.camera.right = 120;
 
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
-    hemiLight.position.set(0, 200, 0);
-
-    this.mainScene.add(hemiLight);
-    this.mainScene.add(dirLight);
+    this.scene.add(hemiLight);
+    this.scene.add(dirLight);
   }
 
   createGround() {
@@ -258,7 +325,8 @@ export class Scene {
     this.camera.updateProjectionMatrix();
 
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.composer.setSize(window.innerWidth, window.innerHeight);
+    this.composer &&
+      this.composer.setSize(window.innerWidth, window.innerHeight);
 
     this.effectFocus.uniforms["screenWidth"].value =
       window.innerWidth * window.devicePixelRatio;
@@ -383,6 +451,24 @@ export class Scene {
     requestAnimationFrame(this.render.bind(this));
     let delta = this.clock.getDelta();
 
+    if (this.circle && this.skelet && this.particle && this.sceneNumber === 1) {
+      this.particle.rotation.x += 0.0;
+      this.particle.rotation.y -= 0.004;
+      // this.circle.rotation.x -= 0.002;
+      this.circle.rotation.y -= 0.003;
+      // this.skelet.rotation.x -= 0.001;
+      this.skelet.rotation.y += 0.002;
+    }
+
+    if (this.isMoveCamera) {
+      this.camera.position.y -= 2;
+      this.camera.position.x -= 0.5;
+      this.isMoveCamera =
+        Math.abs(this.camera.position.y - this.yPositionMain) > 1
+          ? true
+          : false;
+    }
+
     if (this.composer && this.sceneNumber === 0)
       this.welcomeSceneAnimation(delta * 10);
 
@@ -391,7 +477,7 @@ export class Scene {
     if (this.isMoveCamera) {
       this.moveCamera();
     }
-
+    this.renderer.clear();
     this.renderer.render(this.scene, this.camera);
   }
 }

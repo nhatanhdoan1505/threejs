@@ -19,6 +19,11 @@ export class UI {
   inputNameArea = document.querySelector("#input-name-area");
   gameOver = document.querySelector("#game-over");
   resultScore = document.querySelector("#result-score");
+  characterName = document.querySelector("#character-name");
+  chooseStage = document.querySelector("#choose-stage");
+  thumbStage = document.querySelector("#thumbnail-stage");
+  nameStage = document.querySelector("#name-stage");
+  // container = document.querySelector("#container");x
 
   iconContainer;
 
@@ -62,13 +67,19 @@ export class UI {
         : "good";
     this.result.innerHTML = "";
     // this.result.className = "";
-    // _status = status === 1 && combo > 1 ? `${_status} X${combo}` : _status;
+    _status = status === 1 && combo > 1 ? `${_status} X${combo}` : _status;
     let _class = _status.split(" ")[0];
     // this.result.classList.add("fade-in", "result", _class);
     this.result.innerHTML = `<h1 class="fade-in result ${_class}">${_status}</h1>`;
   }
 
   showChallenge(challenge) {
+    if (challenge.length === 0) {
+      const html = challenge.map((c) => keyHtml[c]).join("");
+      this.div.innerHTML = html;
+      this.moveBall.innerHTML = "";
+      return;
+    }
     this.div.classList.add("play");
     const html = challenge.map((c) => keyHtml[c]).join("");
     this.div.innerHTML = html;
@@ -77,7 +88,7 @@ export class UI {
 
   showChallengeColor(index, miss) {
     const spanList = this.div.children;
-    spanList[index].classList.add(miss === 0 ? "miss" : "pass");
+    spanList[index].classList.add(miss === 0 ? "_miss" : "pass");
     spanList[index].classList.add("vibrate");
   }
 
@@ -127,7 +138,6 @@ export class UI {
   }
 
   loadingAnimation(id) {
-    console.log(id);
     this.iconContainer = document.querySelector(`#ID${id}`);
     this.iconContainer.innerHTML = this.loading;
   }
@@ -160,10 +170,25 @@ export class UI {
     else this.chooseCharacter.style.visibility = "hidden";
   }
 
-  refeshUI() {
+  chooseStageControl() {
+    if (this.chooseStage.style.visibility === "hidden") {
+      this.chooseStage.style.visibility = "visible";
+    } else this.chooseStage.style.visibility = "hidden";
+  }
+
+  showStage(thumbnail, name) {
+    console.log(thumbnail);
+    console.log(this.thumbStage);
+    this.thumbStage.src = thumbnail;
+    this.nameStage.innerHTML = name;
+  }
+
+  refreshUI() {
     this.inputNameArea.style.visibility = "hidden";
     this.musicSideBar.style.visibility = "hidden";
     this.chooseCharacter.style.visibility = "hidden";
+    this.chooseStage.style.visibility = "hidden";
+    this.showChallenge([]);
   }
 
   gameOverControl(point, isOut = false) {
@@ -172,7 +197,15 @@ export class UI {
       this.gameOver.classList.add("fade-out");
     } else {
       this.resultScore.innerHTML = point;
+      if (this.gameOver.classList.contains("fade-out"))
+        this.gameOver.classList.remove("fade-out");
+
+      this.gameOver.classList.remove("drop-down");
       this.gameOver.classList.add("drop-down");
     }
+  }
+
+  showCharacterName(name) {
+    this.characterName.innerHTML = name;
   }
 }
