@@ -2,11 +2,12 @@ const express = require("express");
 const Browser = require("./Browser");
 const YoutubeService = require("./YoutubeService");
 const cors = require("cors");
+const bodyParser = require('body-parser');
 
 const app = express();
 
 app.use(cors("*"));
-app.use(express.json());
+app.use(bodyParser.json());
 
 const browser = new Browser();
 const youtubeService = new YoutubeService();
