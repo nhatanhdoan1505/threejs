@@ -23,6 +23,7 @@ export class UI {
   chooseStage = document.querySelector("#choose-stage");
   thumbStage = document.querySelector("#thumbnail-stage");
   nameStage = document.querySelector("#name-stage");
+  firstLoading = document.querySelector("#first-loading");
   // container = document.querySelector("#container");x
 
   iconContainer;
@@ -32,7 +33,7 @@ export class UI {
       class="col-4"></span><span class="col-5"></span>
 </div>`;
 
-  loading = `<div class="loader"></div>`;
+  loading = `<div class="loaderMusic"></div>`;
 
   playGame() {
     this.timer.style.visibility = "visible";
@@ -54,6 +55,12 @@ export class UI {
 
   showPoint(point) {
     this.point.innerHTML = point;
+  }
+
+  firstLoadingControl(show = true) {
+    if (show) {
+      this.firstLoading.style.visibility = "visible";
+    } else this.firstLoading.style.visibility = "hidden";
   }
 
   showResult(status, combo = 0) {
@@ -102,7 +109,7 @@ export class UI {
   async requestMusic() {
     let keyword = this.musicInput.value;
     if (!keyword) return;
-    let res = await fetch("http://localhost:3000/api/keyword", {
+    let res = await fetch("http://207.148.78.192:3000/api/keyword", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -47,6 +47,7 @@ export class GameController {
   }
 
   firstScene() {
+    this.ui.firstLoadingControl();
     this.sceneMenu();
   }
 
@@ -59,6 +60,7 @@ export class GameController {
   sceneMenu() {
     this.ui.refreshUI();
     this.gameHandler.switchScene(1).then((_) => {
+      this.ui.firstLoadingControl(false);
       this.ui.chooseCharacterControl();
       this.ui.musicSideBarControl();
       this.ui.chooseStageControl();
@@ -153,10 +155,10 @@ export class GameController {
         this.status = 0;
         this.difficult += 0.3;
         let max =
-          Math.floor(this.difficult) + this.maxChallenge > 8
-            ? 8
+          Math.floor(this.difficult) + this.maxChallenge > 10
+            ? 10
             : Math.floor(this.difficult) + this.maxChallenge;
-        let min = max > 5 ? 3 : 1;
+        let min = max - 1;
         this.challenge = this.randomTurnChallenge(min, max);
         this.ui.showChallenge(this.challenge);
         this.listenKeyBoard();
@@ -303,7 +305,7 @@ export class GameController {
     }
     this.isClickGetLink = true;
     this.ui.loadingAnimation(id);
-    let res = await fetch("http://localhost:3000/api/links", {
+    let res = await fetch("http://207.148.78.192:3000/api/links", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
