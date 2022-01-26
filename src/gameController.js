@@ -2,7 +2,7 @@ import { Utils } from "./utils.js";
 import { GameHandler } from "./gameHandler.js";
 import { UI } from "./ui.js";
 import { GameSystem } from "./gameSystem.js";
-import { Player } from "./Player.js";
+import { Player } from "./player.js";
 export class GameController {
   start = false;
   gameControlChallenge = null;
