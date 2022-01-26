@@ -13,11 +13,11 @@ export class Player {
     return await this.gameHandler.loadModel([this.name]);
   }
 
-  async standAnimation() {
-    return await this.gameHandler.standAnimation(this.name);
-  }
-
   async playAnimation() {
     return await this.gameHandler.playAnimation(this.name);
+  }
+
+  async standAnimation() {
+    return await this.gameHandler.standAnimation(this.name);
   }
 }
